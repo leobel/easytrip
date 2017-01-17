@@ -15,4 +15,5 @@ import dagger.Component;
 @Component(modules = {AppModule.class, ServicesModule.class})
 public interface ApplicationComponent {
         void inject(MainActivity app);
+        void inject(InspireMeActivity app);
 }

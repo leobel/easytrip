@@ -2,6 +2,7 @@ package org.freelectron.leobel.easytrip;
 
 import android.support.multidex.MultiDexApplication;
 
+import com.pinterest.android.pdk.PDKClient;
 import com.squareup.leakcanary.LeakCanary;
 
 import org.freelectron.leobel.easytrip.modules.AppModule;
@@ -24,6 +25,10 @@ public class EasyTripApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        //Initialize Pinterest
+        PDKClient.configureInstance(this, getString(R.string.pinterest_api));
+        PDKClient.getInstance().onConnect(this);
 
         // Initialize Leak Canary
         LeakCanary.install(this);

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">EasyTrip</string>
+    <string name="find_location_place_holder">city name or airport</string>
+    <string name="pinterest_api">4878705636740704524</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

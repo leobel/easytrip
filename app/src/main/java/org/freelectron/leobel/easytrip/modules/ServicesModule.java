@@ -11,10 +11,13 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.pinterest.android.pdk.PDKClient;
 
 import org.freelectron.leobel.easytrip.BuildConfig;
 import org.freelectron.leobel.easytrip.services.LocalisationService;
 import org.freelectron.leobel.easytrip.services.LocalisationServiceImpl;
+import org.freelectron.leobel.easytrip.services.PinterestService;
+import org.freelectron.leobel.easytrip.services.PinterestServiceImpl;
 import org.freelectron.leobel.easytrip.services.PreferenceService;
 import org.freelectron.leobel.easytrip.services.PreferenceServiceImpl;
 import org.freelectron.leobel.easytrip.services.SecurityInterceptor;
@@ -88,6 +91,11 @@ public class ServicesModule {
     }
 
     @Singleton @Provides
+    public PDKClient providesPDKClient(){
+        return PDKClient.getInstance();
+    }
+
+    @Singleton @Provides
     public PreferenceService providesPreferenceService(SharedPreferences sharedPreferences, ObjectMapper objectMapper){
         return new PreferenceServiceImpl(sharedPreferences, objectMapper);
     }
@@ -95,5 +103,10 @@ public class ServicesModule {
     @Singleton @Provides
     public LocalisationService providesLocalisationService(PreferenceService preferenceService, @Named("SKY_SCANNER_API") Retrofit retrofit){
         return new LocalisationServiceImpl(preferenceService, retrofit);
+    }
+
+    @Singleton @Provides
+    public PinterestService providesPinterestService(PDKClient pdkClient){
+        return new PinterestServiceImpl(pdkClient);
     }
 }

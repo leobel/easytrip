@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.freelectron.leobel.easytrip.models.Place;
 import org.freelectron.leobel.easytrip.models.Response;
+import org.freelectron.leobel.easytrip.models.Response.ResponseConverter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Retrofit;
@@ -31,15 +31,12 @@ public class LocalisationServiceImpl implements LocalisationService {
     @Override
     public Observable<Response<List<Place>>> findPlacesByAutoSuggest(String query) {
         return Response.handle(
-                retrofitLocalisationService.findPlacesByAutoSuggest(preferenceService.getCountry(), preferenceService.getCurrency().getCode(), preferenceService.getLocale(), query), Response.NETWORK)
-                .map(response -> {
-                    if(response.isSuccessful()){
-                        return new Response<>(response.getValue().getPlaces(), response.getSource());
+                retrofitLocalisationService.findPlacesByAutoSuggest(preferenceService.getCountry(), preferenceService.getCurrency().getCode(), preferenceService.getLocale(), query),  new ResponseConverter<PlacesByAutoSuggestionResponse, List<Place>>() {
+                    @Override
+                    public Response<List<Place>> convert(PlacesByAutoSuggestionResponse response) {
+                        return new Response<>(response.getPlaces(), Response.NETWORK);
                     }
-                    else{
-                        return new Response<List<Place>>(response.getError(), response.getSource());
-                    }
-                });
+                }, Response.NETWORK);
     }
 
     public interface LocalisationServiceTemplate{

@@ -2,7 +2,6 @@ package org.freelectron.leobel.easytrip.models;
 
 import okhttp3.ResponseBody;
 import rx.Observable;
-import timber.log.Timber;
 
 /**
  * Created by leobel on 1/6/17.
@@ -10,20 +9,21 @@ import timber.log.Timber;
 
 public class Response<T> {
 
-    public static <T> Observable<Response<T>> handle(Observable<retrofit2.Response<T>> observable, int source){
+    public static <T, K> Observable<Response<T>> handle(Observable<retrofit2.Response<K>> observable, ResponseConverter<K, T> converter, int source){
         return observable
                 .map(response -> {
                     if(response.isSuccessful()){
-                        return new Response<>(response.body(), source);
+                        return converter.convert(response.body());
                     }
                     else{
                         return Response.<T>handleError(response.code(), response.message(), response.errorBody(), source);
                     }
+
                 })
                 .onErrorReturn(throwable -> new Response<>(throwable, source));
     }
 
-    private static <T> Response<T> handleError(int code, String message, ResponseBody responseBody, int source) {
+    public static <T> Response<T> handleError(int code, String message, ResponseBody responseBody, int source) {
         switch (code){
             case 403:
                 return new Response<>(new ForbiddenException(), source);
@@ -95,5 +95,10 @@ public class Response<T> {
 
     public boolean isRemote(){
         return source == NETWORK;
+    }
+
+    public abstract static class ResponseConverter<K, T>{
+
+        public abstract Response<T> convert(K source);
     }
 }
