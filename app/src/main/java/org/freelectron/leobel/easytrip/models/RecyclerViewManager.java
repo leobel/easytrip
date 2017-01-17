@@ -1,5 +1,6 @@
 package org.freelectron.leobel.easytrip.models;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -18,21 +19,31 @@ public class RecyclerViewManager<T> {
     private final RecyclerView recyclerView;
     private final View emptyView;
     private final RecyclerViewAdapter recyclerViewAdapter;
+    private final SwipeRefreshLayout swipeRefreshLayout;
 
     private Subscription pendingRequest;
     private PaginateInfo<?> currentPaginateInfo;
     int currentPage;
 
-    public RecyclerViewManager(RecyclerViewListener<T> listener, RecyclerView recyclerView, View emptyView){
+    public RecyclerViewManager(RecyclerViewListener<T> listener, RecyclerView recyclerView, SwipeRefreshLayout swipeRefreshLayout, View emptyView){
         this.listener = listener;
         this.recyclerView = recyclerView;
+        this.swipeRefreshLayout = swipeRefreshLayout;
         this.emptyView = emptyView;
         this.recyclerViewAdapter = listener.getAdapter();
 
         this.recyclerView.setAdapter(recyclerViewAdapter);
         this.emptyView.setVisibility(View.INVISIBLE);
-
+        this.swipeRefreshLayout.setOnRefreshListener(() -> {
+            refreshList();
+        });
         recyclerViewAdapter.setListener(listener);
+        requestItems(currentPaginateInfo);
+    }
+
+    private void refreshList() {
+        currentPaginateInfo = null;
+        detachRecyclerView();
         requestItems(currentPaginateInfo);
     }
 
@@ -41,6 +52,9 @@ public class RecyclerViewManager<T> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {
+                    if(swipeRefreshLayout.isRefreshing()){
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                     if(response.isSuccessful()){
                         if(paginateInfo == null){
                             recyclerViewAdapter.setItems(response.getValue());

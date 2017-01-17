@@ -3,6 +3,7 @@ package org.freelectron.leobel.easytrip.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -80,12 +81,13 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
         View view = inflater.inflate(R.layout.fragment_pin_list, container, false);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.pins_recycler_view);
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         View emptyView = view.findViewById(R.id.empty_view_container);
 
         final int columns = getResources().getInteger(R.integer.gallery_columns);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerViewManager = new RecyclerViewManager<>(this, recyclerView, emptyView);
+        recyclerViewManager = new RecyclerViewManager<>(this, recyclerView, swipeRefreshLayout, emptyView);
 
         return view;
     }
