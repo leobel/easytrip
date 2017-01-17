@@ -32,6 +32,7 @@ public class RecyclerViewManager<T> {
         this.recyclerView.setAdapter(recyclerViewAdapter);
         this.emptyView.setVisibility(View.INVISIBLE);
 
+        recyclerViewAdapter.setListener(listener);
         requestItems(currentPaginateInfo);
     }
 

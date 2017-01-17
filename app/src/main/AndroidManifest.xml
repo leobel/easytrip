@@ -28,7 +28,9 @@
                 <data android:scheme="pdk4878705636740704524" />
             </intent-filter>
         </activity>
-        <activity android:name=".InspireMeActivity"></activity>
+        <activity android:name=".InspireMeActivity" />
+        <activity android:name=".NavigationActivity" />
+        <activity android:name=".PinDetailsActivity"></activity>
     </application>
 
 </manifest>

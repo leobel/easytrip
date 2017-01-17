@@ -1,0 +1,77 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    tools:context="org.freelectron.leobel.easytrip.fragments.PinDetailsFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/pin_board_name_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="Culture Trip"/>
+
+            <TextView
+                android:id="@+id/pin_metadata_name_details"
+                android:layout_below="@+id/pin_board_name_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:textSize="21sp"
+                android:text="The 6 most Stunning Art Deco Buildings in Los Angeles"/>
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/pin_image_details"
+                android:layout_below="@+id/pin_metadata_name_details"
+                android:layout_width="match_parent"
+                android:layout_height="431dp"
+                fresco:actualImageScaleType="fitXY"
+                android:background="#828282" />
+
+            <TextView
+                android:id="@+id/pin_note_details"
+                android:layout_below="@+id/pin_image_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="A Guide to the Ultimate California Road Trip."/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pin_note_details"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/find_flight_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="How to go"/>
+
+                <Button
+                    android:id="@+id/find_hotel_button"
+                    android:layout_toRightOf="@+id/find_flight_button"
+                    android:layout_alignBaseline="@+id/find_flight_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Where to stay"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+
+
+</RelativeLayout>
