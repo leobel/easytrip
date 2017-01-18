@@ -23,7 +23,6 @@ public class RecyclerViewManager<T> {
 
     private Subscription pendingRequest;
     private PaginateInfo<?> currentPaginateInfo;
-    int currentPage;
 
     public RecyclerViewManager(RecyclerViewListener<T> listener, RecyclerView recyclerView, SwipeRefreshLayout swipeRefreshLayout, View emptyView){
         this.listener = listener;
@@ -35,6 +34,10 @@ public class RecyclerViewManager<T> {
         this.recyclerView.setAdapter(recyclerViewAdapter);
         this.emptyView.setVisibility(View.INVISIBLE);
         this.swipeRefreshLayout.setOnRefreshListener(() -> {
+            refreshList();
+        });
+        this.emptyView.setOnClickListener(view -> {
+            emptyView.setVisibility(View.GONE);
             refreshList();
         });
         recyclerViewAdapter.setListener(listener);
@@ -65,15 +68,17 @@ public class RecyclerViewManager<T> {
                         if(response.hasMoreItems()){
                             currentPaginateInfo = response.getPaginateInfo();
                         }
+
                     }
                     else{
+                        emptyView.setVisibility(View.VISIBLE);
                         listener.onLoadingItemsError(response.getError());
                     }
                 });
     }
 
     public void detachRecyclerView(){
-        if(!pendingRequest.isUnsubscribed()){
+        if(pendingRequest != null && !pendingRequest.isUnsubscribed()){
             pendingRequest.unsubscribe();
         }
     }

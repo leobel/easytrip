@@ -1,5 +1,4 @@
 package org.freelectron.leobel.easytrip;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,11 +13,11 @@ import android.widget.Button;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.pinterest.android.pdk.PDKClient;
-import com.pinterest.android.pdk.PDKPin;
 import com.pinterest.android.pdk.PDKUser;
 
 import org.freelectron.leobel.easytrip.adapters.PlaceRecyclerViewAdapter;
 import org.freelectron.leobel.easytrip.adapters.RecyclerViewPlaceAdapterListener;
+import org.freelectron.leobel.easytrip.fragments.InspireMeFragment;
 import org.freelectron.leobel.easytrip.models.Place;
 import org.freelectron.leobel.easytrip.models.Response;
 import org.freelectron.leobel.easytrip.services.LocalisationService;
@@ -93,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewPlace
         });
 
         pins.setOnClickListener(view -> {
-            startActivity(new Intent(this, InspireMeActivity.class));
+            startActivity(new Intent(this, InspireMeFragment.class));
         });
 
     }

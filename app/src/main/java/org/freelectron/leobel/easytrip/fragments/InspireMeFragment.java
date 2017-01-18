@@ -1,24 +1,20 @@
-package org.freelectron.leobel.easytrip;
+package org.freelectron.leobel.easytrip.fragments;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import com.pinterest.android.pdk.PDKPin;
 
-import org.freelectron.leobel.easytrip.fragments.PinDetailsFragment;
-import org.freelectron.leobel.easytrip.fragments.PinListFragment;
-import org.freelectron.leobel.easytrip.services.PinterestService;
+import org.freelectron.leobel.easytrip.EasyTripApp;
+import org.freelectron.leobel.easytrip.PinDetailsActivity;
 
-import javax.inject.Inject;
-
-public class InspireMeActivity extends NavigationActivity implements PinListFragment.OnPinListInteractionListener{
+public class InspireMeFragment extends NavigationFragment implements PinListFragment.OnPinListInteractionListener{
 
     public static String PIN_FRAGMENT_LIST = "PIN_FRAGMENT_LIST";
     public static String PIN_FRAGMENT_DETAILS = "PIN_FRAGMENT_DETAILS";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         EasyTripApp.getInstance().getComponent().inject(this);
@@ -29,7 +25,7 @@ public class InspireMeActivity extends NavigationActivity implements PinListFrag
 
     @Override
     public void onPinSelected(PDKPin pin) {
-        Intent intent = new Intent(this, PinDetailsActivity.class);
+        Intent intent = new Intent(getActivity(), PinDetailsActivity.class);
         intent.putExtra(PIN_FRAGMENT_DETAILS, pin);
         startActivity(intent);
     }

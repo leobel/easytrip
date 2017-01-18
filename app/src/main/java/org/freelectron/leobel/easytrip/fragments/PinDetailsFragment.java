@@ -49,7 +49,7 @@ public class PinDetailsFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param pin Pinterest pin.
-     * @return A new instance of fragment PinDetailsFragment.
+     * @return A new instance of fragment PinDetailsActivity.
      */
     public static PinDetailsFragment newInstance(PDKPin pin) {
         PinDetailsFragment fragment = new PinDetailsFragment();

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.pinterest.android.pdk.PDKOriginal;
 import com.pinterest.android.pdk.PDKPin;
+import com.pinterest.android.pdk.PDKPlace;
 
 import org.freelectron.leobel.easytrip.R;
 import org.freelectron.leobel.easytrip.models.RecyclerViewHolder;
@@ -43,8 +44,10 @@ public class PinViewHolder extends RecyclerViewHolder<PDKPin> {
 
         ArrayList<String> a = new ArrayList();
         pinImage.setImageURI(Uri.parse(original.getUrl()));
-        pinNote.setText(item.getNote());
-
+        PDKPlace place = item.getMetadata().getPlace();
+        if(place!= null) {
+            pinNote.setText(place.getName());
+        }
 
     }
 }

@@ -80,6 +80,8 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_pin_list, container, false);
 
+        setListener(getParentFragment());
+
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.pins_recycler_view);
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         View emptyView = view.findViewById(R.id.empty_view_container);
@@ -93,13 +95,11 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
     }
 
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnPinListInteractionListener) {
-            mListener = (OnPinListInteractionListener) context;
+    public void setListener(Object listener) {
+        if (listener instanceof OnPinListInteractionListener) {
+            mListener = (OnPinListInteractionListener) listener;
         } else {
-            throw new RuntimeException(context.toString()
+            throw new RuntimeException(listener.toString()
                     + " must implement OnPinListInteractionListener");
         }
     }
@@ -121,8 +121,6 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
 
     }
 
-
-
     @Override
     public Observable<PageResponse<List<PDKPin>>> getItems(PaginateInfo<?> paginateInfo) {
         String cursor = "";
@@ -134,6 +132,8 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
     public void onLoadingItemsError(Throwable error) {
         Timber.d("Result error: " + error.getMessage());
     }
+
+
 
     /**
      * This interface must be implemented by activities that contain this
