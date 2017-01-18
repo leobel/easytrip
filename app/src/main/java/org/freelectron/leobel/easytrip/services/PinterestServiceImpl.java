@@ -71,7 +71,6 @@ public class PinterestServiceImpl implements PinterestService {
                             }
                             subscriber.onNext(new PageResponse<>(response.getPinList(), paginateInfo, Response.NETWORK));
                             subscriber.onCompleted();
-                            Timber.d("Result pin list success!!!");
                         }
                     }
 
