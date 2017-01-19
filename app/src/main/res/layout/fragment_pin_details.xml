@@ -11,45 +11,55 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/pin_board_name_details"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:text="Culture Trip"/>
 
-            <TextView
-                android:id="@+id/pin_metadata_name_details"
-                android:layout_below="@+id/pin_board_name_details"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                android:textSize="21sp"
-                android:text="The 6 most Stunning Art Deco Buildings in Los Angeles"/>
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/pin_image_details"
-                android:layout_below="@+id/pin_metadata_name_details"
                 android:layout_width="match_parent"
                 android:layout_height="431dp"
                 fresco:actualImageScaleType="fitXY"
                 android:background="#828282" />
 
-            <TextView
-                android:id="@+id/pin_note_details"
+            <RelativeLayout
+                android:id="@+id/pin_info_container"
                 android:layout_below="@+id/pin_image_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="A Guide to the Ultimate California Road Trip."/>
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:id="@+id/pin_metadata_name_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:textSize="21sp"
+                    android:text="The 6 most Stunning Art Deco Buildings in Los Angeles"/>
+
+                <TextView
+                    android:id="@+id/pin_note_details"
+                    android:layout_below="@+id/pin_metadata_name_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="A Guide to the Ultimate California Road Trip."/>
+
+                <TextView
+                    android:id="@+id/pin_board_name_details"
+                    android:layout_below="@+id/pin_note_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="Culture Trip"/>
+            </RelativeLayout>
+
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/pin_note_details"
+                android:layout_below="@+id/pin_info_container"
                 android:gravity="center">
 
                 <Button

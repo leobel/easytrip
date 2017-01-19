@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 
 import com.pinterest.android.pdk.PDKPin;
 
@@ -18,7 +20,12 @@ public class PinDetailsActivity extends AppCompatActivity implements PinDetailsF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_navigation);
+        setContentView(R.layout.activity_pin_details);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_back);
+        toolbar.setNavigationOnClickListener(view -> finish());
 
         Intent intent = getIntent();
         PDKPin pin = (PDKPin) intent.getSerializableExtra(PIN_FRAGMENT_DETAILS);
@@ -26,8 +33,15 @@ public class PinDetailsActivity extends AppCompatActivity implements PinDetailsF
         org.freelectron.leobel.easytrip.fragments.PinDetailsFragment fragment = org.freelectron.leobel.easytrip.fragments.PinDetailsFragment.newInstance(pin);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.root_container, fragment);
+        transaction.replace(R.id.pin_details, fragment);
         transaction.commit();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.home, menu);
+        return true;
     }
 
     @Override
