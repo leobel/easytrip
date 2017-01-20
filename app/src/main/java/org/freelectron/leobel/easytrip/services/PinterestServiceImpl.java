@@ -82,4 +82,32 @@ public class PinterestServiceImpl implements PinterestService {
             }
         }).onErrorReturn(throwable -> new PageResponse<>(throwable, Response.NETWORK));
     }
+
+    @Override
+    public Observable<PageResponse<List<PDKPin>>> getBoardPins(String board, String fields, String cursor) {
+        return Observable.create(new Observable.OnSubscribe<PageResponse<List<PDKPin>>>() {
+            @Override
+            public void call(Subscriber<? super PageResponse<List<PDKPin>>> subscriber) {
+                pdkClient.getBoardPins(board, fields, cursor, new PDKCallback(){
+                    @Override
+                    public void onSuccess(PDKResponse response) {
+                        if (! subscriber.isUnsubscribed()) {
+                            PaginateInfo<String> paginateInfo = null;
+                            if(response.hasNext()){
+                                paginateInfo = new PaginateInfo<>();
+                                paginateInfo.setIndex(response.getCursor());
+                            }
+                            subscriber.onNext(new PageResponse<>(response.getPinList(), paginateInfo, Response.NETWORK));
+                            subscriber.onCompleted();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(PDKException exception) {
+                        subscriber.onError(exception);
+                    }
+                });
+            }
+        }).onErrorReturn(throwable -> new PageResponse<>(throwable, Response.NETWORK));
+    }
 }

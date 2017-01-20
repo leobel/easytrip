@@ -19,4 +19,5 @@ import rx.Observable;
 public interface PinterestService {
     Observable<Response<PDKUser>> login(Context context, List<String> scopes);
     Observable<PageResponse<List<PDKPin>>> getMyPins(String fields, String cursor);
+    Observable<PageResponse<List<PDKPin>>> getBoardPins(String board, String fields, String cursor);
 }

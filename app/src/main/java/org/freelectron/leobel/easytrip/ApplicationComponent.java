@@ -16,8 +16,10 @@ import dagger.Component;
 @Singleton
 @Component(modules = {AppModule.class, ServicesModule.class})
 public interface ApplicationComponent {
+        void inject(HomeActivity activity);
         void inject(MainActivity activity);
         void inject(InspireMeFragment activity);
 
         void inject(PinListFragment fragment);
+
 }

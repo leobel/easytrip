@@ -62,6 +62,10 @@ public class RecyclerViewAdapter<T, V extends RecyclerViewHolder<T> > extends Re
         notifyDataSetChanged();
     }
 
+    public List<T> getItems(){
+        return items;
+    }
+
     public void setListener(RecyclerViewListener<T> listener){
         this.listener = listener;
     }

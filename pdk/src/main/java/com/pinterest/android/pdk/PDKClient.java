@@ -330,6 +330,19 @@ public class PDKClient {
         getPath(path, getMapWithFields(fields), callback);
     }
 
+    public void getBoardPins(String boardId, String fields, String cursor, PDKCallback callback) {
+        if (Utils.isEmpty(boardId)) {
+            if (callback != null) callback.onFailure(new PDKException("Invalid board Id"));
+            return;
+        }
+        String path =  BOARDS + boardId + "/" + PINS;
+        HashMap<String, String> params = getMapWithFields(fields);
+        if(cursor != null && !cursor.isEmpty()){
+            params.put(PDKClient.PDK_QUERY_PARAM_CURSOR, cursor);
+        }
+        getPath(path, params, callback);
+    }
+
     public void deleteBoard(String boardId, PDKCallback callback) {
         if (Utils.isEmpty(boardId)) {
             if (callback != null) callback.onFailure(new PDKException("Board Id cannot be empty"));

@@ -10,6 +10,9 @@ import java.util.Currency;
 
 public interface PreferenceService {
 
+    Boolean isDataBaseCreated();
+    void setDataBaseCreated(Boolean isCreated);
+
     String getCountry();
     void setCountry(String country);
 

@@ -4,10 +4,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import java.io.Serializable;
+import java.util.List;
+
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import timber.log.Timber;
 
 /**
  * Created by leobel on 1/16/17.
@@ -23,6 +25,8 @@ public class RecyclerViewManager<T> {
 
     private Subscription pendingRequest;
     private PaginateInfo<?> currentPaginateInfo;
+    private boolean isDataLoaded;
+    private boolean isLoading;
 
     public RecyclerViewManager(RecyclerViewListener<T> listener, RecyclerView recyclerView, SwipeRefreshLayout swipeRefreshLayout, View emptyView){
         this.listener = listener;
@@ -38,36 +42,37 @@ public class RecyclerViewManager<T> {
         });
         this.emptyView.setOnClickListener(view -> {
             emptyView.setVisibility(View.GONE);
-            refreshList();
+            requestItems(currentPaginateInfo, true);
         });
         recyclerViewAdapter.setListener(listener);
-        requestItems(currentPaginateInfo);
     }
 
     private void refreshList() {
         currentPaginateInfo = null;
-        detachRecyclerView();
-        requestItems(currentPaginateInfo);
+        unSubscribe();
+        requestItems(currentPaginateInfo, false);
     }
 
-    private void requestItems(PaginateInfo<?> paginateInfo) {
+    public void requestItems(PaginateInfo<?> paginateInfo, boolean append) {
+        isLoading = true;
+        isDataLoaded = false;
         pendingRequest = listener.getItems(paginateInfo)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {
+                    isLoading = false;
                     if(swipeRefreshLayout.isRefreshing()){
                         swipeRefreshLayout.setRefreshing(false);
                     }
                     if(response.isSuccessful()){
-                        if(paginateInfo == null){
-                            recyclerViewAdapter.setItems(response.getValue());
-                        }
-                        else{
+                        if(append){
                             recyclerViewAdapter.appendItems(response.getValue());
                         }
-                        if(response.hasMoreItems()){
-                            currentPaginateInfo = response.getPaginateInfo();
+                        else{
+                            recyclerViewAdapter.setItems(response.getValue());
                         }
+                        currentPaginateInfo = response.getPaginateInfo();
+                        isDataLoaded = true;
 
                     }
                     else{
@@ -77,9 +82,25 @@ public class RecyclerViewManager<T> {
                 });
     }
 
-    public void detachRecyclerView(){
+    public void unSubscribe(){
         if(pendingRequest != null && !pendingRequest.isUnsubscribed()){
             pendingRequest.unsubscribe();
         }
+    }
+
+    public boolean isDataLoaded(){
+        return isDataLoaded;
+    }
+
+    public boolean isLoading(){
+        return isLoading;
+    }
+
+    public List<T> getItems(){
+        return recyclerViewAdapter.getItems();
+    }
+
+    public void setItems(List<T> items){
+        recyclerViewAdapter.setItems(items);
     }
 }

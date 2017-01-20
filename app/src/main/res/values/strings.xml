@@ -14,4 +14,10 @@
     <string name="inspire_me_tab">Inspire Me</string>
     <string name="flight_tab">Flights</string>
     <string name="hotel_tab">Hotels</string>
+
+    <string name="lonely_planet_tab">Lonely Planet</string>
+    <string name="adventure_tab">Adventure</string>
+    <string name="art_culture_tab">Art &amp; Culture</string>
+    <string name="festival_event_tab">Festival &amp; Events</string>
+    <string name="relax_tab">Relax Holydays</string>
 </resources>
