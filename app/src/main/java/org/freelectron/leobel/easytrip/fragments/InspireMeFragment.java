@@ -54,8 +54,14 @@ public class InspireMeFragment extends NavigationFragment implements PinListFrag
             items = (ArrayList<PDKPin>)savedInstanceState.getSerializable(ITEMS_LIST);
         }
 
-        fragment = PinListFragment.newInstance(category, items);
-        addFragment(fragment, PIN_FRAGMENT_LIST);
+        fragment = (PinListFragment) findFragment(PIN_FRAGMENT_LIST);
+        if(fragment == null){
+            fragment = PinListFragment.newInstance(category, items);
+            addFragment(fragment, PIN_FRAGMENT_LIST);
+        }
+        else{
+            attachFragment(fragment);
+        }
     }
 
     @Override
@@ -65,9 +71,5 @@ public class InspireMeFragment extends NavigationFragment implements PinListFrag
         startActivity(intent);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(ITEMS_LIST, (ArrayList<PDKPin>)fragment.getItems());
-    }
+
 }

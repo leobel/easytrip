@@ -25,15 +25,15 @@ public class RecyclerViewManager<T> {
 
     private Subscription pendingRequest;
     private PaginateInfo<?> currentPaginateInfo;
-    private boolean isDataLoaded;
     private boolean isLoading;
 
-    public RecyclerViewManager(RecyclerViewListener<T> listener, RecyclerView recyclerView, SwipeRefreshLayout swipeRefreshLayout, View emptyView){
+    public RecyclerViewManager(RecyclerViewListener<T> listener, RecyclerView recyclerView, SwipeRefreshLayout swipeRefreshLayout, View emptyView, List<T> items, PaginateInfo<?> paginateInfo){
         this.listener = listener;
         this.recyclerView = recyclerView;
         this.swipeRefreshLayout = swipeRefreshLayout;
         this.emptyView = emptyView;
         this.recyclerViewAdapter = listener.getAdapter();
+        this.currentPaginateInfo = paginateInfo;
 
         this.recyclerView.setAdapter(recyclerViewAdapter);
         this.emptyView.setVisibility(View.INVISIBLE);
@@ -45,6 +45,13 @@ public class RecyclerViewManager<T> {
             requestItems(currentPaginateInfo, true);
         });
         recyclerViewAdapter.setListener(listener);
+
+        if(items == null){
+            requestItems(null, false);
+        }
+        else{
+            recyclerViewAdapter.setItems(items);
+        }
     }
 
     private void refreshList() {
@@ -55,7 +62,6 @@ public class RecyclerViewManager<T> {
 
     public void requestItems(PaginateInfo<?> paginateInfo, boolean append) {
         isLoading = true;
-        isDataLoaded = false;
         pendingRequest = listener.getItems(paginateInfo)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -72,8 +78,6 @@ public class RecyclerViewManager<T> {
                             recyclerViewAdapter.setItems(response.getValue());
                         }
                         currentPaginateInfo = response.getPaginateInfo();
-                        isDataLoaded = true;
-
                     }
                     else{
                         emptyView.setVisibility(View.VISIBLE);
@@ -85,11 +89,8 @@ public class RecyclerViewManager<T> {
     public void unSubscribe(){
         if(pendingRequest != null && !pendingRequest.isUnsubscribed()){
             pendingRequest.unsubscribe();
+            isLoading = false;
         }
-    }
-
-    public boolean isDataLoaded(){
-        return isDataLoaded;
     }
 
     public boolean isLoading(){
@@ -102,5 +103,9 @@ public class RecyclerViewManager<T> {
 
     public void setItems(List<T> items){
         recyclerViewAdapter.setItems(items);
+    }
+
+    public PaginateInfo<?> getPaginateInfo(){
+        return currentPaginateInfo;
     }
 }

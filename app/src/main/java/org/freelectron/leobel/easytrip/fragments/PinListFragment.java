@@ -42,9 +42,10 @@ import timber.log.Timber;
 public class PinListFragment extends Fragment implements RecyclerViewListener<PDKPin> {
 
     private static final String ARG_CATEGORY_PARAM = "ARG_CATEGORY_PARAM";
-    private static final String ARG_ITEMS_PARAM = "ARG_ITEMS_PARAM";
+    private static final String ITEMS_LIST = "ITEMS_LIST";
+    private static final String PAGINATE_INFO = "PAGINATE_INFO";
+    private static final String INDEX = "INDEX";
 
-    List<PDKPin> items;
     RecyclerViewManager<PDKPin> recyclerViewManager;
     private OnPinListInteractionListener mListener;
 
@@ -75,7 +76,6 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
         PinListFragment fragment = new PinListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_CATEGORY_PARAM, categoryId);
-        args.putSerializable(ARG_ITEMS_PARAM, (ArrayList<PDKPin>)items);
         fragment.setArguments(args);
         return fragment;
     }
@@ -88,7 +88,6 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
 
         if (getArguments() != null) {
             categoryId = getArguments().getInt(ARG_CATEGORY_PARAM);
-            items = (ArrayList<PDKPin>)getArguments().getSerializable(ARG_ITEMS_PARAM);
             boards = realmService.getBoardByCategory(categoryId);
         }
     }
@@ -109,8 +108,13 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-        recyclerViewManager = new RecyclerViewManager<>(this, recyclerView, swipeRefreshLayout, emptyView);
-
+        List<PDKPin> items = null;
+        PaginateInfo<String> paginateInfo = null;
+        if(savedInstanceState != null){
+            items = (ArrayList<PDKPin>)savedInstanceState.getSerializable(ITEMS_LIST);
+            paginateInfo = (PaginateInfo<String>) savedInstanceState.getSerializable(PAGINATE_INFO);
+        }
+        recyclerViewManager = new RecyclerViewManager<>(this, recyclerView, swipeRefreshLayout, emptyView, items, paginateInfo);
 
         return view;
     }
@@ -126,21 +130,17 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if(items == null){
-            recyclerViewManager.requestItems(null, false);
-        }
-        else if(!recyclerViewManager.isLoading()){
-            recyclerViewManager.setItems(items);
-        }
-
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
         recyclerViewManager.unSubscribe();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(ITEMS_LIST, recyclerViewManager != null ? (ArrayList<PDKPin>)recyclerViewManager.getItems(): null);
+        outState.putSerializable(PAGINATE_INFO, recyclerViewManager!= null ? recyclerViewManager.getPaginateInfo() : null);
+        outState.putInt(INDEX, index);
     }
 
     @Override
@@ -178,11 +178,6 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
     @Override
     public void onLoadingItemsError(Throwable error) {
         Timber.d("Result error: " + error.getMessage());
-    }
-
-
-    public List<PDKPin> getItems(){
-        return recyclerViewManager != null ? recyclerViewManager.getItems() : new ArrayList<>(0);
     }
 
     /**

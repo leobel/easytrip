@@ -18,6 +18,8 @@ public class NavigationFragment extends Fragment {
     Fragment fragment;
     String tag;
 
+    FragmentManager fragmentManager;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -42,12 +44,39 @@ public class NavigationFragment extends Fragment {
             this.tag = tag;
         }
         else{
-            FragmentManager fragmentManager = getChildFragmentManager();
+            if(fragmentManager == null){
+                fragmentManager = getChildFragmentManager();
+            }
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.root_container, fragment, tag);
+            transaction.add(R.id.root_container, fragment, tag);
             transaction.commit();
         }
 
+    }
+
+    public void attachFragment(@NonNull Fragment fragment) {
+        if(fragmentManager == null){
+            fragmentManager = getChildFragmentManager();
+        }
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.attach(fragment);
+        transaction.commit();
+    }
+
+    public void detachFragment(@NonNull Fragment fragment) {
+        if(fragmentManager == null){
+            fragmentManager = getChildFragmentManager();
+        }
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.detach(fragment);
+        transaction.commit();
+    }
+
+    public Fragment findFragment(String tag) {
+        if(fragmentManager == null){
+            fragmentManager = getChildFragmentManager();
+        }
+        return fragmentManager.findFragmentByTag(tag);
     }
 
     /**
