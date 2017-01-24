@@ -160,7 +160,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_inspire_me) {
             viewPager.setCurrentItem(InspireMeTabPageAdapter.LONELY_PLANET_TAB_INDEX);
         } else if (id == R.id.nav_flights) {
-//            viewPager.setCurrentItem(pageAdapter.FLIGHTS_TAB_INDEX);
+            startActivity(new Intent(this, FlightFormActivity.class));
         } else if (id == R.id.nav_hotels) {
 //            viewPager.setCurrentItem(pageAdapter.HOTELS_TAB_INDEX);
         } else if (id == R.id.nav_manage) {
