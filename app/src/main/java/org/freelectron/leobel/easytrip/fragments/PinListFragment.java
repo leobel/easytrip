@@ -112,6 +112,7 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
         if(savedInstanceState != null){
             items = (ArrayList<PDKPin>)savedInstanceState.getSerializable(ITEMS_LIST);
             paginateInfo = (PaginateInfo<String>) savedInstanceState.getSerializable(PAGINATE_INFO);
+            index = savedInstanceState.getInt(INDEX);
         }
         recyclerViewManager = new RecyclerViewManager<>(this, recyclerView, swipeRefreshLayout, emptyView, items, paginateInfo);
 
@@ -137,9 +138,11 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(ITEMS_LIST, recyclerViewManager != null ? (ArrayList<PDKPin>)recyclerViewManager.getItems(): null);
-        outState.putSerializable(PAGINATE_INFO, recyclerViewManager!= null ? recyclerViewManager.getPaginateInfo() : null);
-        outState.putInt(INDEX, index);
+        if(recyclerViewManager != null){
+            outState.putSerializable(ITEMS_LIST, (ArrayList<PDKPin>)recyclerViewManager.getItems());
+            outState.putSerializable(PAGINATE_INFO, recyclerViewManager.getPaginateInfo());
+            outState.putInt(INDEX, index);
+        }
     }
 
     @Override
