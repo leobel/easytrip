@@ -3,4 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorTranslucentStatusBar">#21000000</color>
+    <color name="colorFlightFormBackground">#36517E</color>
+    <color name="colorFlightFormWhite">#FAFAFA</color>
+    <color name="colorFlightFormLine">#E1E1E1</color>
+    <color name="colorFlightFormIcon">#5FA7F1</color>
+    <color name="colorFlightFormButton">#6AA3F2</color>
+
 </resources>
