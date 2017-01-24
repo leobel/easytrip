@@ -10,12 +10,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 public class FlightFormActivity extends AppCompatActivity {
+
+    View flightReturnContainer;
+    private Animation fadeIn;
+    private Animation fadeOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +49,45 @@ public class FlightFormActivity extends AppCompatActivity {
                 .path(String.valueOf(R.drawable.flight_form))
                 .build();
         image.setImageURI(uri);
+
+        flightReturnContainer = findViewById(R.id.flight_return_container);
+
+        fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+
+        fadeIn.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                flightReturnContainer.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                flightReturnContainer.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
     @Override
@@ -48,6 +95,23 @@ public class FlightFormActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
         return true;
+    }
+
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.flight_round_trip:
+                if (checked)
+                    flightReturnContainer.startAnimation(fadeIn);
+                    break;
+            case R.id.flight_one_way:
+                if (checked)
+                    flightReturnContainer.startAnimation(fadeOut);
+                    break;
+        }
     }
 
     private int getStatusBarHeight() {
