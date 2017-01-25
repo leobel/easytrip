@@ -333,7 +333,7 @@
                                     android:layout_alignTop="@+id/search_flight_class"
                                     android:layout_alignBottom="@+id/search_flight_class"
                                     android:tint="@color/colorFlightFormIcon"
-                                    android:src="@drawable/ic_flight_to"/>
+                                    android:src="@drawable/ic_cabin_class"/>
 
                                 <!--<TextView-->
                                     <!--android:id="@+id/flight_cabin_class_text"-->

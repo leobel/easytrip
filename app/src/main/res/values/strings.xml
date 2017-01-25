@@ -29,7 +29,7 @@
     <string name="flight_return">Return</string>
     <string name="flight_round_trip">Round Trip</string>
     <string name="flight_one_way">One Way</string>
-    <string name="flight_cabin_class">Cabin Class</string>
+    <string name="flight_cabin_class">Cabin class and passengers</string>
     <string name="flight_destination">Destination</string>
     <string name="flight_depart">Depart</string>
 </resources>

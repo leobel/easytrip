@@ -17,15 +17,15 @@ import rx.schedulers.Schedulers;
 
 public class RecyclerViewManager<T> {
 
-    private final RecyclerViewListener<T> listener;
-    private final RecyclerView recyclerView;
-    private final View emptyView;
-    private final RecyclerViewAdapter recyclerViewAdapter;
-    private final SwipeRefreshLayout swipeRefreshLayout;
+    protected RecyclerViewListener<T> listener;
+    protected RecyclerView recyclerView;
+    protected View emptyView;
+    protected RecyclerViewAdapter recyclerViewAdapter;
+    protected SwipeRefreshLayout swipeRefreshLayout;
 
-    private Subscription pendingRequest;
-    private PaginateInfo<?> currentPaginateInfo;
-    private boolean isLoading;
+    protected Subscription pendingRequest;
+    protected PaginateInfo<?> currentPaginateInfo;
+    protected boolean isLoading;
 
     public RecyclerViewManager(RecyclerViewListener<T> listener, RecyclerView recyclerView, SwipeRefreshLayout swipeRefreshLayout, View emptyView, List<T> items, PaginateInfo<?> paginateInfo){
         this.listener = listener;
@@ -91,6 +91,10 @@ public class RecyclerViewManager<T> {
             pendingRequest.unsubscribe();
             isLoading = false;
         }
+    }
+
+    public RecyclerViewListener<T> getListener(){
+        return listener;
     }
 
     public boolean isLoading(){

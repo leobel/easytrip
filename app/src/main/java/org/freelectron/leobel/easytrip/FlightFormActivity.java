@@ -1,29 +1,43 @@
 package org.freelectron.leobel.easytrip;
 
-import android.graphics.Color;
-import android.graphics.Rect;
+import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import org.freelectron.leobel.easytrip.models.Place;
+
 public class FlightFormActivity extends AppCompatActivity {
+
+    private static final int REQUEST_FROM_PLACE = 1;
+    private static final int REQUEST_TO_PLACE = 2;
+    private static final int REQUEST_DEPARTURE_TIME = 3;
+    private static final int REQUEST_RETURN_TIME = 4;
+    private static final int REQUEST_CABIN_PASSENGERS = 5;
 
     View flightReturnContainer;
     private Animation fadeIn;
     private Animation fadeOut;
+
+    Button searchFlightFrom;
+    Button searchFlightTo;
+    Button searchFlightDeparture;
+    Button searchFlightReturn;
+    Button searchFlightClass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +65,19 @@ public class FlightFormActivity extends AppCompatActivity {
         image.setImageURI(uri);
 
         flightReturnContainer = findViewById(R.id.flight_return_container);
+        searchFlightFrom = (Button) findViewById(R.id.search_flight_from);
+        searchFlightTo = (Button) findViewById(R.id.search_flight_to);
+        searchFlightDeparture = (Button) findViewById(R.id.search_flight_departure);
+        searchFlightReturn = (Button) findViewById(R.id.search_flight_return);
+        searchFlightClass = (Button) findViewById(R.id.search_flight_class);
+
+        searchFlightFrom.setOnClickListener(view -> {
+            startActivityForResult(new Intent(this, SearchPlaceActivity.class), REQUEST_FROM_PLACE);
+        });
+
+        searchFlightTo.setOnClickListener(view -> {
+            startActivityForResult(new Intent(this, SearchPlaceActivity.class), REQUEST_TO_PLACE);
+        });
 
         fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out);
@@ -88,6 +115,24 @@ public class FlightFormActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Activity.RESULT_OK){
+            Place place = null;
+            switch (requestCode){
+                case REQUEST_FROM_PLACE:
+                    place = (Place) data.getSerializableExtra(SearchPlaceActivity.PLACE);
+                    searchFlightFrom.setText(place.getPlaceName());
+                    break;
+                case REQUEST_TO_PLACE:
+                    place = (Place) data.getSerializableExtra(SearchPlaceActivity.PLACE);
+                    searchFlightTo.setText(place.getPlaceName());
+                    break;
+            }
+        }
     }
 
     @Override
