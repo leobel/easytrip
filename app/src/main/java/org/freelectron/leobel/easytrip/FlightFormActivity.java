@@ -47,7 +47,7 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
     Button searchFlightDeparture;
     Button searchFlightReturn;
     Button searchFlightClass;
-    private boolean departureDate;
+    private int flightTime;
     private DateTimeFormatter formatter;
 
     @Override
@@ -93,15 +93,20 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
         });
 
         searchFlightDeparture.setOnClickListener(view -> {
-            departureDate = true;
+            flightTime = REQUEST_DEPARTURE_TIME;
             DialogFragment newFragment = new DatePickerFragment();
             newFragment.show(getSupportFragmentManager(), "datePicker");
         });
 
         searchFlightReturn.setOnClickListener(view -> {
-            departureDate = false;
+            flightTime = REQUEST_RETURN_TIME;
             DialogFragment newFragment = new DatePickerFragment();
             newFragment.show(getSupportFragmentManager(), "datePicker");
+        });
+
+        searchFlightClass.setOnClickListener(view -> {
+            Intent intent =  new Intent(this, CabinPassengerActivity.class);
+            startActivityForResult(intent, REQUEST_CABIN_PASSENGERS);
         });
 
         fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
@@ -196,7 +201,7 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
 
     @Override
     public void onSetDate(DateTime date) {
-        if(departureDate){
+        if(flightTime == REQUEST_DEPARTURE_TIME){
             searchFlightDeparture.setText(formatter.print(date));
         }
         else{

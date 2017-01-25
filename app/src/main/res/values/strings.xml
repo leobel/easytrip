@@ -29,7 +29,17 @@
     <string name="flight_return">Return</string>
     <string name="flight_round_trip">Round Trip</string>
     <string name="flight_one_way">One Way</string>
-    <string name="flight_cabin_class">Cabin class and passengers</string>
+    <string name="flight_cabin_class">Cabin class</string>
     <string name="flight_destination">Destination</string>
     <string name="flight_depart">Depart</string>
+    <string name="flight_passengers_adult">Adults</string>
+    <string name="flight_passengers_children">Children</string>
+    <string name="flight_passengers_infant">Infants</string>
+    <string name="infants_restriction">Infants cannot exceed adults</string>
+    <string name="flight_travelers">Travelers</string>
+    <string name="flight_economy_class">Economy</string>
+    <string name="flight_premium_economy_class">Premium Economy</string>
+    <string name="flight_business_class">Business</string>
+    <string name="flight_first_class">First</string>
+    <string name="save">save</string>
 </resources>
