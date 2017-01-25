@@ -3,6 +3,7 @@ package org.freelectron.leobel.easytrip;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -19,9 +20,17 @@ import android.widget.RelativeLayout;
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import org.freelectron.leobel.easytrip.models.DatePickerListener;
 import org.freelectron.leobel.easytrip.models.Place;
+import org.freelectron.leobel.easytrip.widgets.DatePickerFragment;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
-public class FlightFormActivity extends AppCompatActivity {
+import java.text.DateFormat;
+import java.util.Date;
+
+public class FlightFormActivity extends AppCompatActivity implements DatePickerListener {
 
     private static final int REQUEST_FROM_PLACE = 1;
     private static final int REQUEST_TO_PLACE = 2;
@@ -38,6 +47,8 @@ public class FlightFormActivity extends AppCompatActivity {
     Button searchFlightDeparture;
     Button searchFlightReturn;
     Button searchFlightClass;
+    private boolean departureDate;
+    private DateTimeFormatter formatter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +67,8 @@ public class FlightFormActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(view -> finish());
+
+        formatter = DateTimeFormat.forPattern("dd MMM yyyy");
 
         SimpleDraweeView image = (SimpleDraweeView) findViewById(R.id.background_image);
         Uri uri = new Uri.Builder()
@@ -77,6 +90,18 @@ public class FlightFormActivity extends AppCompatActivity {
 
         searchFlightTo.setOnClickListener(view -> {
             startActivityForResult(new Intent(this, SearchPlaceActivity.class), REQUEST_TO_PLACE);
+        });
+
+        searchFlightDeparture.setOnClickListener(view -> {
+            departureDate = true;
+            DialogFragment newFragment = new DatePickerFragment();
+            newFragment.show(getSupportFragmentManager(), "datePicker");
+        });
+
+        searchFlightReturn.setOnClickListener(view -> {
+            departureDate = false;
+            DialogFragment newFragment = new DatePickerFragment();
+            newFragment.show(getSupportFragmentManager(), "datePicker");
         });
 
         fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
@@ -115,6 +140,7 @@ public class FlightFormActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     @Override
@@ -166,5 +192,15 @@ public class FlightFormActivity extends AppCompatActivity {
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    @Override
+    public void onSetDate(DateTime date) {
+        if(departureDate){
+            searchFlightDeparture.setText(formatter.print(date));
+        }
+        else{
+            searchFlightReturn.setText(formatter.print(date));
+        }
     }
 }
