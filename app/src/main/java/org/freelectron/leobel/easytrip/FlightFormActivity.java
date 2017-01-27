@@ -40,10 +40,10 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
     private static final String DEPARTURE_DATE = "DEPARTURE_DATE";
     private static final String RETURN_DATE = "RETURN_DATE";
     private static final String FLIGHT_TYPE = "FLIGHT_TYPE";
-    private static final String TRAVELERS_ADULTS = "TRAVELERS_ADULTS";
-    private static final String TRAVELERS_CHILDREN= "TRAVELERS_CHILDREN";
-    private static final String TRAVELERS_INFANTS = "TRAVELERS_INFANTS";
-    private static final String TRAVELERS_CABIN_CLASS = "TRAVELERS_CABIN_CLASS";
+    public static final String TRAVELERS_ADULTS = "TRAVELERS_ADULTS";
+    public static final String TRAVELERS_CHILDREN= "TRAVELERS_CHILDREN";
+    public static final String TRAVELERS_INFANTS = "TRAVELERS_INFANTS";
+    public static final String TRAVELERS_CABIN_CLASS = "TRAVELERS_CABIN_CLASS";
 
     private static String[] cabinClass = new String[]{"Economy", "PremiumEconomy", "Business", "First"};
 
@@ -129,6 +129,10 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
 
         searchFlightClass.setOnClickListener(view -> {
             Intent intent =  new Intent(this, CabinPassengerActivity.class);
+            intent.putExtra(TRAVELERS_ADULTS, adults);
+            intent.putExtra(TRAVELERS_CHILDREN, children);
+            intent.putExtra(TRAVELERS_INFANTS, infants);
+            intent.putExtra(TRAVELERS_CABIN_CLASS, cabin);
             startActivityForResult(intent, REQUEST_CABIN_PASSENGERS);
         });
 
