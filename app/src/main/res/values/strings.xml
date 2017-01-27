@@ -37,6 +37,7 @@
     <string name="flight_passengers_infant">Infants</string>
     <string name="infants_restriction">Infants cannot exceed adults</string>
     <string name="flight_travelers">Travelers</string>
+    <string name="flight_traveler">Traveler</string>
     <string name="flight_economy_class">Economy</string>
     <string name="flight_premium_economy_class">Premium Economy</string>
     <string name="flight_business_class">Business</string>
@@ -47,4 +48,8 @@
     <string name="flight_cabin_passenger_negative_text">Discard</string>
     <string name="flight_cabin_passenger_positive_text">Save</string>
     <string name="flight_cabin_passenger_positive_cancel_text">Cancel</string>
+    <string name="flight_invalid_departure_place">Departure Place cannot be empty</string>
+    <string name="flight_invalid_destination_place">Destination place cannot be empty</string>
+    <string name="flight_invalid_departure_date">Departure date cannot be empty</string>
+    <string name="flight_invalid_return_date">Return date cannot be empty</string>
 </resources>

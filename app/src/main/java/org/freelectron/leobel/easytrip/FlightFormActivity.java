@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -24,6 +25,7 @@ import org.freelectron.leobel.easytrip.models.DatePickerListener;
 import org.freelectron.leobel.easytrip.models.Place;
 import org.freelectron.leobel.easytrip.widgets.DatePickerFragment;
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -56,6 +58,7 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
     Button searchFlightDeparture;
     Button searchFlightReturn;
     Button searchFlightClass;
+    Button searchFlight;
     RadioGroup radioGroup;
 
 
@@ -106,6 +109,7 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
         searchFlightDeparture = (Button) findViewById(R.id.search_flight_departure);
         searchFlightReturn = (Button) findViewById(R.id.search_flight_return);
         searchFlightClass = (Button) findViewById(R.id.search_flight_class);
+        searchFlight = (Button) findViewById(R.id.search_flight);
 
         searchFlightFrom.setOnClickListener(view -> {
             startActivityForResult(new Intent(this, SearchPlaceActivity.class), REQUEST_FROM_PLACE);
@@ -134,6 +138,12 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
             intent.putExtra(TRAVELERS_INFANTS, infants);
             intent.putExtra(TRAVELERS_CABIN_CLASS, cabin);
             startActivityForResult(intent, REQUEST_CABIN_PASSENGERS);
+        });
+
+        searchFlight.setOnClickListener(view -> {
+            if(isValidForm()){
+
+            }
         });
 
         fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
@@ -185,7 +195,7 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
             cabin = savedInstanceState.getInt(TRAVELERS_CABIN_CLASS);
         }
         else{
-            departureDate = DateTime.now();
+            departureDate = DateTime.now().withTime(0,0,0,0);
             returnDate = departureDate.plusDays(2);
             flightType = 0;
             adults = 1;
@@ -225,10 +235,16 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
                 case REQUEST_FROM_PLACE:
                     departurePlace = (Place) data.getSerializableExtra(SearchPlaceActivity.PLACE);
                     searchFlightFrom.setText(departurePlace.getPlaceName());
+                    if(searchFlightFrom.getError() != null){
+                        searchFlightFrom.setError(null);
+                    }
                     break;
                 case REQUEST_TO_PLACE:
                     destinationPlace = (Place) data.getSerializableExtra(SearchPlaceActivity.PLACE);
                     searchFlightTo.setText(destinationPlace.getPlaceName());
+                    if(searchFlightTo.getError() != null){
+                        searchFlightTo.setError(null);
+                    }
                     break;
                 case REQUEST_CABIN_PASSENGERS:
                     adults = data.getIntExtra(CabinPassengerActivity.ADULTS_PARAM, 1);
@@ -277,11 +293,18 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
             case R.id.flight_round_trip:
                 if (checked)
                     flightType = 0;
+                    returnDate = departureDate.plusDays(2);
+                    searchFlightReturn.setText(formatter.print(returnDate));
                     flightReturnContainer.startAnimation(fadeIn);
                     break;
             case R.id.flight_one_way:
                 if (checked)
                     flightType = 1;
+                    returnDate = null;
+                    searchFlightReturn.setText("");
+                    if(searchFlightReturn.getError() != null){
+                        searchFlightReturn.setError(null);
+                    }
                     flightReturnContainer.startAnimation(fadeOut);
                     break;
         }
@@ -292,9 +315,26 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
     @Override
     public void onSetDate(DateTime date) {
         if(flightTime == REQUEST_DEPARTURE_TIME){
+            departureDate = date;
+            if(searchFlightDeparture.getError() != null){
+                searchFlightDeparture.setError(null);
+            }
+            if(flightType == 0 && returnDate != null && date.isAfter(returnDate)){
+                returnDate = null;
+                searchFlightReturn.setText("");
+            }
+
             searchFlightDeparture.setText(formatter.print(date));
         }
         else{
+            returnDate = date;
+            if(searchFlightReturn.getError() != null){
+                searchFlightReturn.setError(null);
+            }
+            if(departureDate != null && date.isBefore(departureDate)){
+                departureDate = null;
+                searchFlightDeparture.setText("");
+            }
             searchFlightReturn.setText(formatter.print(date));
         }
     }
@@ -309,6 +349,34 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
     }
 
     private void setCabinAndPassengers(int adults, int children, int infants, int cabin) {
-        searchFlightClass.setText(String.format("%d Travelers, %s", (adults + children + infants), cabinClass[cabin]));
+        int travelers = adults + children + infants;
+        String text = travelers > 1 ? getString(R.string.flight_travelers) : getString(R.string.flight_traveler);
+        searchFlightClass.setText(String.format("%d %s, %s", travelers, text, cabinClass[cabin]));
+    }
+
+    private boolean isValidForm(){
+        if(departurePlace == null){
+            searchFlightFrom.setError("");
+            Toast.makeText(this, R.string.flight_invalid_departure_place, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(destinationPlace == null){
+            searchFlightTo.setError("");
+            Toast.makeText(this, R.string.flight_invalid_destination_place, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(departureDate == null){
+            searchFlightDeparture.setError("");
+            Toast.makeText(this, R.string.flight_invalid_departure_date, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(flightType == 0 ){
+            if(returnDate == null){
+                searchFlightReturn.setError("");
+                Toast.makeText(this, R.string.flight_invalid_return_date, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        return true;
     }
 }
