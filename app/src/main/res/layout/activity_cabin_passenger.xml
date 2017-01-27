@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <include layout="@layout/app_bar_home"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </include>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:fillViewport="true">
+
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="500dp"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <RelativeLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5">
+
+                <TextView
+                    android:id="@+id/flight_travelers_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:text="@string/flight_travelers"/>
+
+                <RelativeLayout
+                    android:layout_below="@+id/flight_travelers_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:id="@+id/flight_passenger_container"
+                        android:layout_alignParentTop="true"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.33"
+                            android:gravity="center"
+                            android:text="@string/flight_passengers_adult"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.33"
+                            android:gravity="center"
+                            android:text="@string/flight_passengers_children"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.33"
+                            android:gravity="center"
+                            android:text="@string/flight_passengers_infant"/>
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/flight_passenger_line"
+                        android:layout_below="@+id/flight_passenger_container"
+                        style="@style/navigationSeparator"></View>
+
+
+                    <RelativeLayout
+                        android:layout_below="@id/flight_passenger_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:id="@+id/flight_passenger_selector"
+                            android:layout_above="@+id/flight_passenger_restrictions"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp">
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.33">
+
+
+                                <NumberPicker
+                                    android:id="@+id/number_picker_adults"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    >
+
+                                </NumberPicker>
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.33"
+                                android:layout_marginLeft="20dp">
+
+                                <NumberPicker
+                                    android:id="@+id/number_picker_children"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"></NumberPicker>
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.33"
+                                android:layout_marginLeft="20dp">
+
+                                <NumberPicker
+                                    android:id="@+id/number_picker_infants"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"></NumberPicker>
+
+                            </RelativeLayout>
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/flight_passenger_restrictions"
+                            android:layout_alignParentBottom="true"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="#ff0000"
+                            android:text=""/>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_above="@+id/flight_cabin_class_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:textColor="#000000"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:text="@string/flight_cabin_class"/>
+
+                    <RelativeLayout
+                        android:id="@+id/flight_cabin_class_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_alignTop="@+id/flight_cabin_class_radio_group"
+                            android:layout_alignBottom="@+id/flight_cabin_class_radio_group">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="0.25"
+                                android:textColor="#000000"
+                                android:textSize="16sp"
+                                android:text="@string/flight_economy_class"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="0.25"
+                                android:textColor="#000000"
+                                android:textSize="16sp"
+                                android:text="@string/flight_premium_economy_class"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="0.25"
+                                android:textColor="#000000"
+                                android:textSize="16sp"
+                                android:text="@string/flight_business_class"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="0.25"
+                                android:textColor="#000000"
+                                android:textSize="16sp"
+                                android:text="@string/flight_first_class"/>
+                        </LinearLayout>
+
+                        <RadioGroup
+                            android:id="@+id/flight_cabin_class_radio_group"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true">
+
+                            <RadioButton
+                                android:id="@+id/flight_economy_class"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:onClick="onRadioButtonClicked"/>
+
+                            <RadioButton
+                                android:id="@+id/flight_premium_economy_class"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:onClick="onRadioButtonClicked"/>
+
+                            <RadioButton
+                                android:id="@+id/flight_business_class"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:onClick="onRadioButtonClicked"/>
+
+                            <RadioButton
+                                android:id="@+id/flight_first_class"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:onClick="onRadioButtonClicked" />
+
+                        </RadioGroup>
+
+                    </RelativeLayout>
+
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+
+</android.support.design.widget.CoordinatorLayout>

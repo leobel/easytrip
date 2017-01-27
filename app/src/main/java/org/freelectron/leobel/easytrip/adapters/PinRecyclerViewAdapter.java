@@ -12,9 +12,4 @@ public class PinRecyclerViewAdapter extends RecyclerViewAdapter<PDKPin, PinViewH
         super(viewHolderId, view -> new PinViewHolder(view));
     }
 
-    @Override
-    public void onBindViewHolder(PinViewHolder holder, int position) {
-        super.onBindViewHolder(holder, position);
-    }
-
 }

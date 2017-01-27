@@ -46,7 +46,7 @@
                 android:id="@+id/plane_icon"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginTop="45dp"
+                android:layout_marginTop="40dp"
                 android:layout_centerHorizontal="true"
                 android:tint="#FFFFFF"
                 android:src="@drawable/ic_flight_form"/>
@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="22sp"
-                android:layout_marginTop="36dp"
+                android:layout_marginTop="25dp"
                 android:gravity="center"
                 android:layout_centerHorizontal="true"
                 android:textColor="#FFFFFF"
@@ -68,9 +68,9 @@
                 android:layout_below="@+id/ask_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="21dp"
-                android:layout_marginRight="21dp"
-                android:layout_marginTop="29dp">
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="20dp">
 
                 <RelativeLayout
                     android:id="@+id/input_form_container"
@@ -84,14 +84,15 @@
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp">
+                        android:minHeight="310dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp">
 
                         <RelativeLayout
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="0.27">
+                            android:layout_weight="0.25">
 
                             <RelativeLayout
                                 android:layout_width="wrap_content"
@@ -105,24 +106,26 @@
                                     android:tint="@color/colorFlightFormIcon"
                                     android:src="@drawable/ic_flight_from"/>
 
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_above="@+id/search_flight_from"
-                                    android:layout_alignLeft="@+id/search_flight_from"
-                                    android:text="@string/flight_from"/>
+                                <!--<TextView-->
+                                    <!--android:id="@+id/flight_from_text"-->
+                                    <!--android:layout_alignParentTop="true"-->
+                                    <!--android:layout_width="match_parent"-->
+                                    <!--android:layout_height="wrap_content"-->
+                                    <!--android:layout_alignLeft="@+id/search_flight_from"-->
+                                    <!--android:text="@string/flight_from"/>-->
 
                                 <Button
                                     style="@style/flightInputFormButton"
                                     android:id="@+id/search_flight_from"
+                                    android:layout_above="@+id/flight_from_line"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="40dp"
-                                    android:layout_centerVertical="true"
-                                    android:text="New York, LaGuardia, NY (LGA)"/>
+                                    android:layout_marginLeft="35dp"
+                                    android:hint="@string/flight_departure"/>
 
                                 <View
-                                    android:layout_below="@+id/search_flight_from"
+                                    android:id="@+id/flight_from_line"
+                                    android:layout_alignParentBottom="true"
                                     android:layout_alignLeft="@+id/search_flight_from"
                                     style="@style/navigationSeparator"/>
 
@@ -133,7 +136,7 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="0.27">
+                            android:layout_weight="0.25">
 
                             <RelativeLayout
                                 android:layout_width="wrap_content"
@@ -147,24 +150,26 @@
                                     android:tint="@color/colorFlightFormIcon"
                                     android:src="@drawable/ic_flight_to"/>
 
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_above="@+id/search_flight_to"
-                                    android:layout_alignLeft="@+id/search_flight_to"
-                                    android:text="@string/flight_to"/>
+                                <!--<TextView-->
+                                    <!--android:id="@+id/flight_to_text"-->
+                                    <!--android:layout_alignParentTop="true"-->
+                                    <!--android:layout_width="match_parent"-->
+                                    <!--android:layout_height="wrap_content"-->
+                                    <!--android:layout_alignLeft="@+id/search_flight_to"-->
+                                    <!--android:text="@string/flight_to"/>-->
 
                                 <Button
                                     style="@style/flightInputFormButton"
                                     android:id="@+id/search_flight_to"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="40dp"
-                                    android:layout_centerVertical="true"
-                                    android:text="Nice, France (NCE)"/>
+                                    android:layout_above="@+id/flight_to_line"
+                                    android:layout_marginLeft="35dp"
+                                    android:hint="@string/flight_destination"/>
 
                                 <View
-                                    android:layout_below="@+id/search_flight_to"
+                                    android:id="@+id/flight_to_line"
+                                    android:layout_alignParentBottom="true"
                                     android:layout_alignLeft="@+id/search_flight_to"
                                     style="@style/navigationSeparator"/>
 
@@ -174,63 +179,183 @@
 
                         <RelativeLayout
                             android:layout_width="match_parent"
+                            android:layout_height="20dp"
+                            android:layout_marginTop="20dp">
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="35dp">
+
+                                <RadioGroup
+                                    android:id="@+id/flight_radio_group"
+                                    android:orientation="horizontal"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <RadioButton
+                                        android:id="@+id/flight_round_trip"
+                                        android:checked="true"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.5"
+                                        android:text="@string/flight_round_trip"
+                                        android:onClick="onRadioButtonClicked"/>
+
+                                    <RadioButton
+                                        android:id="@+id/flight_one_way"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.5"
+                                        android:text="@string/flight_one_way"
+                                        android:onClick="onRadioButtonClicked"/>
+                                </RadioGroup>
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="0.27">
+                            android:layout_weight="0.25">
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center">
+
+                                <RelativeLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.5">
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignTop="@+id/search_flight_departure"
+                                        android:layout_alignBottom="@+id/search_flight_departure"
+                                        android:tint="@color/colorFlightFormIcon"
+                                        android:src="@drawable/ic_flight_date"/>
+
+                                    <!--<TextView-->
+                                        <!--android:id="@+id/flight_departure_text"-->
+                                        <!--android:layout_width="wrap_content"-->
+                                        <!--android:layout_height="wrap_content"-->
+                                        <!--android:layout_alignLeft="@+id/search_flight_departure"-->
+                                        <!--android:text="@string/flight_departure"/>-->
+
+                                    <Button
+                                        style="@style/flightInputFormButton"
+                                        android:drawableRight="@drawable/ic_arrow_drop_down"
+                                        android:paddingRight="0dp"
+                                        android:layout_above="@+id/flight_departure_line"
+                                        android:id="@+id/search_flight_departure"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="35dp"
+                                        android:hint="@string/flight_depart"/>
+
+                                    <View
+                                        android:id="@+id/flight_departure_line"
+                                        android:layout_alignParentBottom="true"
+                                        android:layout_alignLeft="@+id/search_flight_departure"
+                                        android:layout_alignRight="@+id/search_flight_departure"
+                                        style="@style/navigationSeparator"/>
+
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/flight_return_container"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.5"
+                                    android:layout_marginLeft="10dp">
+
+                                    <ImageView
+                                        android:id="@+id/flight_return_icon"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignTop="@+id/search_flight_return"
+                                        android:layout_alignBottom="@+id/search_flight_return"
+                                        android:tint="@color/colorFlightFormIcon"
+                                        android:src="@drawable/ic_flight_date"/>
+
+                                    <!--<TextView-->
+                                        <!--android:layout_alignParentTop="true"-->
+                                        <!--android:id="@+id/flight_return_text"-->
+                                        <!--android:layout_width="match_parent"-->
+                                        <!--android:layout_height="wrap_content"-->
+                                        <!--android:layout_alignLeft="@+id/search_flight_return"-->
+                                        <!--android:text="@string/flight_return"/>-->
+
+                                    <Button
+                                        style="@style/flightInputFormButton"
+                                        android:drawableRight="@drawable/ic_arrow_drop_down"
+                                        android:paddingRight="0dp"
+                                        android:layout_above="@+id/flight_return_line"
+                                        android:layout_toRightOf="@+id/flight_return_icon"
+                                        android:id="@+id/search_flight_return"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="10dp"
+                                        android:hint="@string/flight_return"/>
+
+                                    <View
+                                        android:id="@+id/flight_return_line"
+                                        android:layout_alignParentBottom="true"
+                                        android:layout_alignLeft="@+id/search_flight_return"
+                                        android:layout_alignRight="@+id/search_flight_return"
+                                        style="@style/navigationSeparator"/>
+
+                                </RelativeLayout>
+
+
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="0.25">
 
                             <RelativeLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                >
+                                android:layout_height="match_parent">
 
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignTop="@+id/search_flight_departure"
-                                    android:layout_alignBottom="@+id/search_flight_departure"
+                                    android:layout_alignTop="@+id/search_flight_class"
+                                    android:layout_alignBottom="@+id/search_flight_class"
                                     android:tint="@color/colorFlightFormIcon"
-                                    android:src="@drawable/ic_flight_date"/>
+                                    android:src="@drawable/ic_cabin_class"/>
 
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_above="@+id/search_flight_departure"
-                                    android:layout_alignLeft="@+id/search_flight_departure"
-                                    android:text="@string/flight_departure"/>
-
-                                <Button
-                                    style="@style/flightInputFormButton"
-                                    android:layout_toLeftOf="@+id/search_flight_way"
-                                    android:drawableRight="@drawable/ic_arrow_drop_down"
-                                    android:paddingRight="0dp"
-                                    android:id="@+id/search_flight_departure"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="40dp"
-                                    android:layout_centerVertical="true"
-                                    android:text="29 September 2017"/>
-
-                                <View
-                                    android:layout_below="@+id/search_flight_departure"
-                                    android:layout_alignLeft="@+id/search_flight_departure"
-                                    android:layout_alignRight="@+id/search_flight_departure"
-                                    style="@style/navigationSeparator"/>
+                                <!--<TextView-->
+                                    <!--android:id="@+id/flight_cabin_class_text"-->
+                                    <!--android:layout_alignParentTop="true"-->
+                                    <!--android:layout_width="match_parent"-->
+                                    <!--android:layout_height="wrap_content"-->
+                                    <!--android:layout_alignLeft="@+id/search_flight_class"-->
+                                    <!--android:text="@string/flight_cabin_class"/>-->
 
                                 <Button
                                     style="@style/flightInputFormButton"
-                                    android:drawableRight="@drawable/ic_arrow_drop_down"
-                                    android:paddingRight="0dp"
-                                    android:id="@+id/search_flight_way"
-                                    android:layout_width="90dp"
+                                    android:id="@+id/search_flight_class"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="10dp"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:text="One way"/>
+                                    android:layout_above="@+id/flight_cabin_class_line"
+                                    android:layout_marginLeft="35dp"
+                                    android:hint="@string/flight_cabin_class"/>
 
                                 <View
-                                    android:layout_below="@+id/search_flight_departure"
-                                    android:layout_alignLeft="@+id/search_flight_way"
-                                    android:layout_alignRight="@+id/search_flight_way"
+                                    android:id="@+id/flight_cabin_class_line"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_alignLeft="@+id/search_flight_class"
                                     style="@style/navigationSeparator"/>
 
                             </RelativeLayout>
@@ -239,11 +364,12 @@
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="0.19"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
                             android:gravity="center">
 
                             <Button
+                                android:id="@+id/search_flight"
                                 android:layout_width="match_parent"
                                 android:layout_height="50dp"
                                 android:layout_marginBottom="5dp"
