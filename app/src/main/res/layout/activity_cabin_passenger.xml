@@ -15,6 +15,8 @@
         android:layout_marginTop="?attr/actionBarSize"
         android:fillViewport="true">
 
+
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -44,7 +46,7 @@
                 <RelativeLayout
                     android:layout_below="@+id/flight_travelers_header"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
 
                     <LinearLayout
                         android:id="@+id/flight_passenger_container"
@@ -80,66 +82,74 @@
                         android:layout_below="@+id/flight_passenger_container"
                         style="@style/navigationSeparator"></View>
 
-                    <TextView
-                        android:id="@+id/flight_passenger_restrictions"
-                        android:layout_below="@+id/flight_passenger_line"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:gravity="center"
-                        android:textColor="#ff0000"
-                        android:text=""/>
 
-                    <LinearLayout
-                        android:layout_below="@id/flight_passenger_restrictions"
-                        android:orientation="horizontal"
+                    <RelativeLayout
+                        android:layout_below="@id/flight_passenger_line"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <RelativeLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.33">
+                        <LinearLayout
+                            android:id="@+id/flight_passenger_selector"
+                            android:layout_above="@+id/flight_passenger_restrictions"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp">
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.33">
 
 
-                            <NumberPicker
-                                android:id="@+id/number_picker_adults"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                >
+                                <NumberPicker
+                                    android:id="@+id/number_picker_adults"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    >
 
-                            </NumberPicker>
+                                </NumberPicker>
 
-                        </RelativeLayout>
+                            </RelativeLayout>
 
-                        <RelativeLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.33"
-                            android:layout_marginLeft="20dp">
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.33"
+                                android:layout_marginLeft="20dp">
 
-                            <NumberPicker
-                                android:id="@+id/number_picker_children"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"></NumberPicker>
+                                <NumberPicker
+                                    android:id="@+id/number_picker_children"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"></NumberPicker>
 
-                        </RelativeLayout>
+                            </RelativeLayout>
 
-                        <RelativeLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.33"
-                            android:layout_marginLeft="20dp">
+                            <RelativeLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.33"
+                                android:layout_marginLeft="20dp">
 
-                            <NumberPicker
-                                android:id="@+id/number_picker_infants"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"></NumberPicker>
+                                <NumberPicker
+                                    android:id="@+id/number_picker_infants"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"></NumberPicker>
 
-                        </RelativeLayout>
+                            </RelativeLayout>
 
-                    </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/flight_passenger_restrictions"
+                            android:layout_alignParentBottom="true"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="#ff0000"
+                            android:text=""/>
+
+                    </RelativeLayout>
 
                 </RelativeLayout>
 
@@ -155,7 +165,11 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="12dp">
 
                     <TextView
                         android:layout_above="@+id/flight_cabin_class_container"
@@ -245,6 +259,8 @@
                         </RadioGroup>
 
                     </RelativeLayout>
+
+
                 </RelativeLayout>
 
             </RelativeLayout>

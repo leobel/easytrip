@@ -8,13 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
 import com.facebook.common.util.UriUtil;
@@ -27,9 +27,6 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.text.DateFormat;
-import java.util.Date;
-
 public class FlightFormActivity extends AppCompatActivity implements DatePickerListener {
 
     private static final int REQUEST_FROM_PLACE = 1;
@@ -37,6 +34,18 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
     private static final int REQUEST_DEPARTURE_TIME = 3;
     private static final int REQUEST_RETURN_TIME = 4;
     private static final int REQUEST_CABIN_PASSENGERS = 5;
+
+    private static final String DEPARTURE_PLACE = "DEPARTURE_PLACE";
+    private static final String DESTINATION_PLACE = "DESTINATION_PLACE";
+    private static final String DEPARTURE_DATE = "DEPARTURE_DATE";
+    private static final String RETURN_DATE = "RETURN_DATE";
+    private static final String FLIGHT_TYPE = "FLIGHT_TYPE";
+    private static final String TRAVELERS_ADULTS = "TRAVELERS_ADULTS";
+    private static final String TRAVELERS_CHILDREN= "TRAVELERS_CHILDREN";
+    private static final String TRAVELERS_INFANTS = "TRAVELERS_INFANTS";
+    private static final String TRAVELERS_CABIN_CLASS = "TRAVELERS_CABIN_CLASS";
+
+    private static String[] cabinClass = new String[]{"Economy", "PremiumEconomy", "Business", "First"};
 
     View flightReturnContainer;
     private Animation fadeIn;
@@ -47,8 +56,21 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
     Button searchFlightDeparture;
     Button searchFlightReturn;
     Button searchFlightClass;
+    RadioGroup radioGroup;
+
+
     private int flightTime;
     private DateTimeFormatter formatter;
+
+    private Place departurePlace;
+    private Place destinationPlace;
+    private int flightType;
+    private DateTime departureDate;
+    private DateTime returnDate;
+    private int adults;
+    private int children;
+    private int infants;
+    private int cabin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +102,7 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
         flightReturnContainer = findViewById(R.id.flight_return_container);
         searchFlightFrom = (Button) findViewById(R.id.search_flight_from);
         searchFlightTo = (Button) findViewById(R.id.search_flight_to);
+        radioGroup = (RadioGroup) findViewById(R.id.flight_radio_group);
         searchFlightDeparture = (Button) findViewById(R.id.search_flight_departure);
         searchFlightReturn = (Button) findViewById(R.id.search_flight_return);
         searchFlightClass = (Button) findViewById(R.id.search_flight_class);
@@ -146,24 +169,92 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
             }
         });
 
+        if(savedInstanceState != null){
+            departurePlace = (Place) savedInstanceState.getSerializable(DEPARTURE_PLACE);
+            destinationPlace = (Place) savedInstanceState.getSerializable(DESTINATION_PLACE);
+            flightType = savedInstanceState.getInt(FLIGHT_TYPE);
+            departureDate = (DateTime) savedInstanceState.getSerializable(DEPARTURE_DATE);
+            returnDate = (DateTime) savedInstanceState.getSerializable(RETURN_DATE);
+            adults = savedInstanceState.getInt(TRAVELERS_ADULTS);
+            children = savedInstanceState.getInt(TRAVELERS_CHILDREN);
+            infants = savedInstanceState.getInt(TRAVELERS_INFANTS);
+            cabin = savedInstanceState.getInt(TRAVELERS_CABIN_CLASS);
+        }
+        else{
+            departureDate = DateTime.now();
+            returnDate = departureDate.plusDays(2);
+            flightType = 0;
+            adults = 1;
+            children = 0;
+            infants = 0;
+            cabin = 0;
+        }
+
+        if(departurePlace != null){
+            searchFlightFrom.setText(departurePlace.getPlaceName());
+        }
+        if(destinationPlace != null){
+            searchFlightTo.setText(destinationPlace.getPlaceName());
+        }
+
+        searchFlightDeparture.setText(formatter.print(departureDate));
+        searchFlightReturn.setText(formatter.print(returnDate));
+
+        if(flightType == 1){
+            radioGroup.check(R.id.flight_one_way);
+            flightReturnContainer.startAnimation(fadeOut);
+        }
+        else{
+            radioGroup.check(R.id.flight_round_trip);
+            flightReturnContainer.startAnimation(fadeIn);
+        }
+
+        setCabinAndPassengers(adults, children, infants, cabin);
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == Activity.RESULT_OK){
-            Place place = null;
             switch (requestCode){
                 case REQUEST_FROM_PLACE:
-                    place = (Place) data.getSerializableExtra(SearchPlaceActivity.PLACE);
-                    searchFlightFrom.setText(place.getPlaceName());
+                    departurePlace = (Place) data.getSerializableExtra(SearchPlaceActivity.PLACE);
+                    searchFlightFrom.setText(departurePlace.getPlaceName());
                     break;
                 case REQUEST_TO_PLACE:
-                    place = (Place) data.getSerializableExtra(SearchPlaceActivity.PLACE);
-                    searchFlightTo.setText(place.getPlaceName());
+                    destinationPlace = (Place) data.getSerializableExtra(SearchPlaceActivity.PLACE);
+                    searchFlightTo.setText(destinationPlace.getPlaceName());
+                    break;
+                case REQUEST_CABIN_PASSENGERS:
+                    adults = data.getIntExtra(CabinPassengerActivity.ADULTS_PARAM, 1);
+                    children = data.getIntExtra(CabinPassengerActivity.CHILDREN_PARAM, 0);
+                    infants = data.getIntExtra(CabinPassengerActivity.INFANTS_PARAM, 0);
+                    cabin = data.getIntExtra(CabinPassengerActivity.CABIN_CLASS_PARAM, 0);
+                    setCabinAndPassengers(adults, children, infants, cabin);
                     break;
             }
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(departurePlace != null){
+            outState.putSerializable(DEPARTURE_PLACE, departurePlace);
+        }
+        if(destinationPlace != null){
+            outState.putSerializable(DESTINATION_PLACE, destinationPlace);
+        }
+
+        outState.putInt(FLIGHT_TYPE, flightType);
+        outState.putSerializable(DEPARTURE_DATE, departureDate);
+        outState.putSerializable(RETURN_DATE, returnDate);
+        outState.putInt(TRAVELERS_ADULTS, adults);
+        outState.putInt(TRAVELERS_CHILDREN, children);
+        outState.putInt(TRAVELERS_INFANTS, infants);
+        outState.putInt(TRAVELERS_CABIN_CLASS, cabin);
     }
 
     @Override
@@ -181,12 +272,26 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
         switch(view.getId()) {
             case R.id.flight_round_trip:
                 if (checked)
+                    flightType = 0;
                     flightReturnContainer.startAnimation(fadeIn);
                     break;
             case R.id.flight_one_way:
                 if (checked)
+                    flightType = 1;
                     flightReturnContainer.startAnimation(fadeOut);
                     break;
+        }
+    }
+
+
+
+    @Override
+    public void onSetDate(DateTime date) {
+        if(flightTime == REQUEST_DEPARTURE_TIME){
+            searchFlightDeparture.setText(formatter.print(date));
+        }
+        else{
+            searchFlightReturn.setText(formatter.print(date));
         }
     }
 
@@ -199,13 +304,7 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
         return result;
     }
 
-    @Override
-    public void onSetDate(DateTime date) {
-        if(flightTime == REQUEST_DEPARTURE_TIME){
-            searchFlightDeparture.setText(formatter.print(date));
-        }
-        else{
-            searchFlightReturn.setText(formatter.print(date));
-        }
+    private void setCabinAndPassengers(int adults, int children, int infants, int cabin) {
+        searchFlightClass.setText(String.format("%d Travelers, %s", (adults + children + infants), cabinClass[cabin]));
     }
 }

@@ -1,10 +1,12 @@
 package org.freelectron.leobel.easytrip;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
@@ -13,6 +15,7 @@ public class CabinPassengerActivity extends AppCompatActivity {
     public static String ADULTS_PARAM = "ADULTS_PARAM";
     public static String CHILDREN_PARAM = "CHILDREN_PARAM";
     public static String INFANTS_PARAM = "INFANTS_PARAM";
+    public static String CABIN_CLASS_PARAM = "CABIN_CLASS_PARAM";
 
 
     private NumberPicker numberPickerAdults;
@@ -24,6 +27,7 @@ public class CabinPassengerActivity extends AppCompatActivity {
     private Integer infants;
 
     private TextView restrictionText;
+    private MenuItem saveItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +75,11 @@ public class CabinPassengerActivity extends AppCompatActivity {
         numberPickerInfants.setOnValueChangedListener((numberPicker, oldValue, newValue) -> {
             if(newValue > numberPickerAdults.getValue()){
                 restrictionText.setText(getString(R.string.infants_restriction));
+                saveItem.setEnabled(false);
             }
             else{
                 restrictionText.setText("");
+                saveItem.setEnabled(true);
             }
         });
 
@@ -84,6 +90,31 @@ public class CabinPassengerActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.cabin_passenger, menu);
+        saveItem = menu.findItem(R.id.cabin_passenger_save);
+
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.cabin_passenger_save) {
+            adults = numberPickerAdults.getValue();
+            children= numberPickerChildren.getValue();
+            infants = numberPickerInfants.getValue();
+            Intent intent = new Intent();
+            intent.putExtra(ADULTS_PARAM, adults);
+            intent.putExtra(CHILDREN_PARAM, children);
+            intent.putExtra(INFANTS_PARAM, infants);
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
