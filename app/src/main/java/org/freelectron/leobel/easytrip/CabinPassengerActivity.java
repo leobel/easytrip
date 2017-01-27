@@ -2,6 +2,7 @@ package org.freelectron.leobel.easytrip;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -26,15 +27,18 @@ public class CabinPassengerActivity extends AppCompatActivity {
     private NumberPicker numberPickerChildren;
     private NumberPicker numberPickerInfants;
 
-    private Integer adults;
-    private Integer children;
-    private Integer infants;
-    private Integer cabin;
+    private int adults;
+    private int children;
+    private int infants;
+    private int cabin;
+    private int currentCabin;
     private String errorText;
 
     private TextView restrictionText;
     private MenuItem saveItem;
     private RadioGroup radioGroup;
+    private AlertDialog saveDialog;
+    private AlertDialog discardDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +46,27 @@ public class CabinPassengerActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_cabin_passenger);
 
+        saveDialog = new AlertDialog.Builder(this)
+                .setMessage(R.string.flight_cabin_passenger_save_ask)
+                .setNegativeButton(R.string.flight_cabin_passenger_negative_text, (dialogInterface, i) -> finish())
+                .setPositiveButton(R.string.flight_cabin_passenger_positive_text, (dialogInterface, i) -> {
+                    saveState();
+                    finish();
+                })
+                .create();
+
+        discardDialog = new AlertDialog.Builder(this)
+                .setMessage(R.string.flight_cabin_passenger_discard_ask)
+                .setNegativeButton(R.string.flight_cabin_passenger_positive_cancel_text, (dialogInterface, i) -> {})
+                .setPositiveButton(R.string.flight_cabin_passenger_negative_text, (dialogInterface, i) -> finish())
+                .create();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back);
-        toolbar.setNavigationOnClickListener(view -> finish());
+        toolbar.setNavigationOnClickListener(view -> {
+            checkStatus();
+        });
 
         numberPickerAdults = (NumberPicker) findViewById(R.id.number_picker_adults);
         numberPickerChildren = (NumberPicker) findViewById(R.id.number_picker_children);
@@ -66,6 +87,8 @@ public class CabinPassengerActivity extends AppCompatActivity {
             cabin = savedInstanceState.getInt(CABIN_CLASS_PARAM);
             errorText = savedInstanceState.getString(RESTRICTION_TEXT, "");
         }
+
+        currentCabin = cabin;
 
         numberPickerAdults.setMinValue(1);
         numberPickerAdults.setMaxValue(8);
@@ -119,6 +142,7 @@ public class CabinPassengerActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -148,20 +172,17 @@ public class CabinPassengerActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.cabin_passenger_save) {
-            adults = numberPickerAdults.getValue();
-            children= numberPickerChildren.getValue();
-            infants = numberPickerInfants.getValue();
-            Intent intent = new Intent();
-            intent.putExtra(ADULTS_PARAM, adults);
-            intent.putExtra(CHILDREN_PARAM, children);
-            intent.putExtra(INFANTS_PARAM, infants);
-            intent.putExtra(CABIN_CLASS_PARAM, cabin);
-            setResult(Activity.RESULT_OK, intent);
+            saveState();
             finish();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        checkStatus();
     }
 
     public void onRadioButtonClicked(View view) {
@@ -172,20 +193,55 @@ public class CabinPassengerActivity extends AppCompatActivity {
         switch(view.getId()) {
             case R.id.flight_economy_class:
                 if (checked)
-                    cabin = 0;
+                    currentCabin = 0;
                 break;
             case R.id.flight_premium_economy_class:
                 if (checked)
-                    cabin = 1;
+                    currentCabin = 1;
                 break;
             case R.id.flight_business_class:
                 if (checked)
-                    cabin = 2;
+                    currentCabin = 2;
                     break;
             case R.id.flight_first_class:
                 if (checked)
-                    cabin = 3;
+                    currentCabin = 3;
                     break;
         }
+    }
+
+    private void checkStatus() {
+        if(canSave()){
+            if(stateChanged()){
+                saveDialog.show();
+            }
+            else{
+                finish();
+            }
+        }
+        else{
+            discardDialog.show();
+        }
+    }
+
+    private boolean stateChanged() {
+        return adults != numberPickerAdults.getValue() || children != numberPickerChildren.getValue() || infants != numberPickerInfants.getValue() || cabin != currentCabin;
+    }
+
+    private boolean canSave() {
+        return restrictionText.getText().toString().isEmpty();
+    }
+
+    private void saveState() {
+        adults = numberPickerAdults.getValue();
+        children= numberPickerChildren.getValue();
+        infants = numberPickerInfants.getValue();
+        cabin = currentCabin;
+        Intent intent = new Intent();
+        intent.putExtra(ADULTS_PARAM, adults);
+        intent.putExtra(CHILDREN_PARAM, children);
+        intent.putExtra(INFANTS_PARAM, infants);
+        intent.putExtra(CABIN_CLASS_PARAM, cabin);
+        setResult(Activity.RESULT_OK, intent);
     }
 }

@@ -42,4 +42,9 @@
     <string name="flight_business_class">Business</string>
     <string name="flight_first_class">First</string>
     <string name="save">save</string>
+    <string name="flight_cabin_passenger_save_ask">Save or discard changes?</string>
+    <string name="flight_cabin_passenger_discard_ask">Discard changes?</string>
+    <string name="flight_cabin_passenger_negative_text">Discard</string>
+    <string name="flight_cabin_passenger_positive_text">Save</string>
+    <string name="flight_cabin_passenger_positive_cancel_text">Cancel</string>
 </resources>
