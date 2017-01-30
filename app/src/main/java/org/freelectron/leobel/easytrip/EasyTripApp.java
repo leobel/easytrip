@@ -39,7 +39,6 @@ public class EasyTripApp extends MultiDexApplication {
 
         // Initialize Pinterest
         PDKClient.configureInstance(this, getString(R.string.pinterest_api));
-        PDKClient.getInstance().onConnect(this);
 
         // Initialize Leak Canary
         LeakCanary.install(this);

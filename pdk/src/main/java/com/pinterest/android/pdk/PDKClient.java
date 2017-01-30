@@ -106,6 +106,10 @@ public class PDKClient {
         return PDKClient.getInstance();
     }
 
+    public static boolean isAuthenticated(){
+        return _isAuthenticated;
+    }
+
     // ================================================================================
     // Getters/Setters
     // ================================================================================
@@ -136,6 +140,7 @@ public class PDKClient {
     public void logout() {
         _accessToken = null;
         _scopes = null;
+        _isAuthenticated = false;
         cancelPendingRequests();
         saveAccessToken(null);
         saveScopes(null);

@@ -3,7 +3,6 @@
     <string name="find_location_place_holder">city name or airport</string>
     <string name="pinterest_api">4878705636740704524</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_home">HomeActivity</string>
 
@@ -52,4 +51,10 @@
     <string name="flight_invalid_destination_place">Destination place cannot be empty</string>
     <string name="flight_invalid_departure_date">Departure date cannot be empty</string>
     <string name="flight_invalid_return_date">Return date cannot be empty</string>
+
+    <!-- Login -->
+    <string name="login_dialog_message">You need a Pinterest account to have access to this feature.</string>
+    <string name="login_dialog_login">Login</string>
+    <string name="login">Log In</string>
+    <string name="logout">Log Out</string>
 </resources>
