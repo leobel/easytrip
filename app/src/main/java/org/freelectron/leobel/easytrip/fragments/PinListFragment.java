@@ -3,17 +3,20 @@ package org.freelectron.leobel.easytrip.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.pinterest.android.pdk.PDKClient;
 import com.pinterest.android.pdk.PDKPin;
 
 import org.freelectron.leobel.easytrip.EasyTripApp;
 import org.freelectron.leobel.easytrip.R;
 import org.freelectron.leobel.easytrip.adapters.PinRecyclerViewAdapter;
+import org.freelectron.leobel.easytrip.models.AuthorizationException;
 import org.freelectron.leobel.easytrip.models.PageResponse;
 import org.freelectron.leobel.easytrip.models.PaginateInfo;
 import org.freelectron.leobel.easytrip.models.Realm.BoardRealm;
@@ -29,7 +32,11 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
+
+import static org.freelectron.leobel.easytrip.HomeActivity.scopes;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,6 +65,7 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
 
     @Inject
     public RealmService realmService;
+    private AlertDialog requireLoginDialog;
 
 
     public PinListFragment() {
@@ -89,6 +97,24 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
             categoryId = getArguments().getInt(ARG_CATEGORY_PARAM);
             boards = realmService.getBoardByCategory(categoryId);
         }
+
+        requireLoginDialog = new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.login_dialog_message)
+                .setNegativeButton(R.string.flight_cabin_passenger_positive_cancel_text, (dialogInterface, i) -> requireLoginDialog.dismiss())
+                .setPositiveButton(R.string.login_dialog_login, (dialogInterface, i) -> {
+                    pinterestService.login(getActivity(), scopes)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(response -> {
+                                if(response.isSuccessful()){
+                                    Timber.d("User login successful :" + response.getValue().getFirstName());
+                                }
+                                else{
+                                    Timber.d("User login error: " + response.getError());
+                                }
+                            });
+                })
+                .create();
     }
 
     @Override
@@ -179,6 +205,9 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
 
     @Override
     public void onLoadingItemsError(Throwable error) {
+        if(error instanceof AuthorizationException && !requireLoginDialog.isShowing()){
+            requireLoginDialog.show();
+        }
         Timber.d("Result error: " + error.getMessage());
     }
 

@@ -21,6 +21,7 @@ import com.pinterest.android.pdk.PDKUser;
 
 import org.freelectron.leobel.easytrip.adapters.InspireMeTabPageAdapter;
 import org.freelectron.leobel.easytrip.adapters.TabPageAdapter;
+import org.freelectron.leobel.easytrip.models.AuthorizationException;
 import org.freelectron.leobel.easytrip.models.Realm.BoardRealm;
 import org.freelectron.leobel.easytrip.models.Realm.TravelCategoryRealm;
 import org.freelectron.leobel.easytrip.models.Response;
@@ -55,8 +56,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Inject
     public PinterestService pinterestService;
-    private AlertDialog requireLoginDialog;
-    private ArrayList<String> scopes;
+    public static ArrayList<String> scopes = new ArrayList<>();
+
+    static {
+        scopes.add(PDKClient.PDKCLIENT_PERMISSION_READ_PUBLIC);
+        scopes.add(PDKClient.PDKCLIENT_PERMISSION_WRITE_PUBLIC);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,32 +101,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         tabLayout.setupWithViewPager(viewPager);
         setTabLayoutIcons(pageAdapter);
 
-        requireLoginDialog = new AlertDialog.Builder(this)
-                    .setMessage(R.string.login_dialog_message)
-                .setNegativeButton(R.string.flight_cabin_passenger_positive_cancel_text, (dialogInterface, i) -> requireLoginDialog.hide())
-                .setPositiveButton(R.string.login_dialog_login, (dialogInterface, i) -> {
-                    pinterestService.login(this, scopes)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(response -> {
-                                if(response.isSuccessful()){
-                                    Timber.d("User login successful :" + response.getValue().getFirstName());
-                                }
-                                else{
-                                    Timber.d("User login error: " + response.getError());
-                                }
-                            });
-                })
-                .create();
-
-        scopes = new ArrayList<String>();
-        scopes.add(PDKClient.PDKCLIENT_PERMISSION_READ_PUBLIC);
-        scopes.add(PDKClient.PDKCLIENT_PERMISSION_WRITE_PUBLIC);
-
         PDKClient.getInstance().onConnect(this);
         if(!PDKClient.isAuthenticated()){
             toggleLogin.setTitle(R.string.login);
-            requireLoginDialog.show();
         }
         else{
             toggleLogin.setTitle(R.string.logout);
