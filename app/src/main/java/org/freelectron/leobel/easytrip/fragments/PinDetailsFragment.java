@@ -35,7 +35,6 @@ public class PinDetailsFragment extends Fragment {
     private PDKPin pin;
     private OnPinDetailsInteractionListener mListener;
 
-    TextView boardName;
     TextView metadataName;
     TextView pinNote;
     PinImageView image;
@@ -74,7 +73,6 @@ public class PinDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_pin_details, container, false);
 
-        boardName = (TextView) view.findViewById(R.id.pin_board_name_details);
         metadataName = (TextView) view.findViewById(R.id.pin_metadata_name_details);
         pinNote = (TextView) view.findViewById(R.id.pin_note_details);
 
@@ -85,15 +83,15 @@ public class PinDetailsFragment extends Fragment {
         image.setImageHeight(original.getHeight());
         image.setImageURI(Uri.parse(original.getUrl()));
 
-        boardName.setText(pin.getBoard().getName());
         PDKPlace place = pin.getMetadata().getPlace();
         if(place != null){
             metadataName.setText(place.getName());
+            pinNote.setText(String.format("%s, %s", place.getLocality(), place.getCountry()));
         }
         else{
             metadataName.setText("");
+            pinNote.setText("");
         }
-        pinNote.setText(pin.getNote());
 
         return view;
     }

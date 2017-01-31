@@ -23,6 +23,7 @@ public class PinDetailsActivity extends AppCompatActivity implements PinDetailsF
         setContentView(R.layout.activity_pin_details);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(view -> finish());
