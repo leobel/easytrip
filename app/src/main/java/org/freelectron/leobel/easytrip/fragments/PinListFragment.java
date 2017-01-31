@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.pinterest.android.pdk.PDKClient;
 import com.pinterest.android.pdk.PDKPin;
 
 import org.freelectron.leobel.easytrip.EasyTripApp;
@@ -129,7 +128,7 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         View emptyView = view.findViewById(R.id.empty_view_container);
 
-        final int columns = getResources().getInteger(R.integer.gallery_columns);
+        int columns = getResources().getInteger(R.integer.gallery_columns);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 

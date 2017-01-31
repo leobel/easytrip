@@ -18,6 +18,7 @@ import com.pinterest.android.pdk.PDKPlace;
 
 import org.freelectron.leobel.easytrip.R;
 import org.freelectron.leobel.easytrip.models.RecyclerViewManager;
+import org.freelectron.leobel.easytrip.widgets.PinImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,7 +38,7 @@ public class PinDetailsFragment extends Fragment {
     TextView boardName;
     TextView metadataName;
     TextView pinNote;
-    SimpleDraweeView image;
+    PinImageView image;
 
 
     public PinDetailsFragment() {
@@ -77,14 +78,11 @@ public class PinDetailsFragment extends Fragment {
         metadataName = (TextView) view.findViewById(R.id.pin_metadata_name_details);
         pinNote = (TextView) view.findViewById(R.id.pin_note_details);
 
-        image = (SimpleDraweeView) view.findViewById(R.id.pin_image_details);
+        image = (PinImageView) view.findViewById(R.id.pin_image_details);
 
         PDKOriginal original = pin.getImage().getOriginal();
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, original.getHeight(), getResources().getDisplayMetrics());
-        layoutParams.addRule(RelativeLayout.BELOW, R.id.pin_metadata_name_details);
-        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        image.setLayoutParams(layoutParams);
+        image.setImageWidth(original.getWidth());
+        image.setImageHeight(original.getHeight());
         image.setImageURI(Uri.parse(original.getUrl()));
 
         boardName.setText(pin.getBoard().getName());

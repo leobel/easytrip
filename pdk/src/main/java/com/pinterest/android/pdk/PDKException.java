@@ -53,7 +53,7 @@ public class PDKException extends Exception {
         // The "WWW-Authenticate" Header tells the client which kind of authentication is needed (either Basic or Digest).
         // This is usually not very useful in headless http clients, but thats how the standard is defined.
         // The error occurs because the lib tries to parse the "WWW-Authenticate" header but can't.
-        if (error != null && error.getMessage().equalsIgnoreCase("java.io.IOException: No authentication challenges found")){
+        if (error != null && error.getMessage() != null && error.getMessage().equalsIgnoreCase("java.io.IOException: No authentication challenges found")){
             _detailMessage = "You are not permitted to access that resource";
             _statusCode = 401;
         }

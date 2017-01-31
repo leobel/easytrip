@@ -15,10 +15,10 @@
 
 
 
-            <com.facebook.drawee.view.SimpleDraweeView
+            <org.freelectron.leobel.easytrip.widgets.PinImageView
                 android:id="@+id/pin_image_details"
                 android:layout_width="match_parent"
-                android:layout_height="431dp"
+                android:layout_height="430dp"
                 fresco:actualImageScaleType="fitXY"
                 android:background="#828282" />
 
