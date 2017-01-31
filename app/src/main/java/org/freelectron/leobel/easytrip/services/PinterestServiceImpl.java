@@ -32,7 +32,7 @@ public class PinterestServiceImpl implements PinterestService {
 
     @Override
     public Observable<Response<PDKUser>> login(Context context, List<String> scopes) {
-        return Observable.create(new Observable.OnSubscribe<Response<PDKUser>>(){
+        return Response.handle(Observable.create(new Observable.OnSubscribe<Response<PDKUser>>(){
             @Override
             public void call(Subscriber<? super Response<PDKUser>> subscriber) {
                 pdkClient.login(context, scopes, new PDKCallback() {
@@ -52,7 +52,7 @@ public class PinterestServiceImpl implements PinterestService {
                     }
                 });
             }
-        }).onErrorReturn(throwable -> new Response<>(throwable, Response.NETWORK));
+        }), Response.NETWORK);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class PinterestServiceImpl implements PinterestService {
 
     @Override
     public Observable<PageResponse<List<PDKPin>>> getBoardPins(String board, String fields, String cursor) {
-        return Observable.create(new Observable.OnSubscribe<PageResponse<List<PDKPin>>>() {
+        return Response.handlePageResponse(Observable.create(new Observable.OnSubscribe<PageResponse<List<PDKPin>>>() {
             @Override
             public void call(Subscriber<? super PageResponse<List<PDKPin>>> subscriber) {
                 pdkClient.getBoardPins(board, fields, cursor, new PDKCallback(){
@@ -108,6 +108,6 @@ public class PinterestServiceImpl implements PinterestService {
                     }
                 });
             }
-        }).onErrorReturn(throwable -> new PageResponse<>(throwable, Response.NETWORK));
+        }), Response.NETWORK);
     }
 }

@@ -10,6 +10,7 @@ public class PageResponse<T> extends Response<T> {
     private PaginateInfo<?> paginateInfo;
 
 
+
     public PageResponse(T value, PaginateInfo paginateInfo) {
         this(value, paginateInfo, Response.CACHE);
     }

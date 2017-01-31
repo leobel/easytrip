@@ -9,6 +9,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -20,6 +21,7 @@ import com.pinterest.android.pdk.PDKUser;
 
 import org.freelectron.leobel.easytrip.adapters.InspireMeTabPageAdapter;
 import org.freelectron.leobel.easytrip.adapters.TabPageAdapter;
+import org.freelectron.leobel.easytrip.models.AuthorizationException;
 import org.freelectron.leobel.easytrip.models.Realm.BoardRealm;
 import org.freelectron.leobel.easytrip.models.Realm.TravelCategoryRealm;
 import org.freelectron.leobel.easytrip.models.Response;
@@ -54,6 +56,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Inject
     public PinterestService pinterestService;
+    public static ArrayList<String> scopes = new ArrayList<>();
+
+    static {
+        scopes.add(PDKClient.PDKCLIENT_PERMISSION_READ_PUBLIC);
+        scopes.add(PDKClient.PDKCLIENT_PERMISSION_WRITE_PUBLIC);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +89,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        MenuItem toggleLogin = navigationView.getMenu().findItem(R.id.login);
         Intent intent = getIntent();
         int selectedTab = intent.getIntExtra(SELECTED_TAB, 0);
 
@@ -92,6 +100,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         tabLayout.setupWithViewPager(viewPager);
         setTabLayoutIcons(pageAdapter);
+
+        PDKClient.getInstance().onConnect(this);
+        if(!PDKClient.isAuthenticated()){
+            toggleLogin.setTitle(R.string.login);
+        }
+        else{
+            toggleLogin.setTitle(R.string.logout);
+
+        }
     }
 
     private static boolean populateDataBase(PreferenceService preferenceService) {
@@ -167,24 +184,26 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.ic_login) {
-            List scopes = new ArrayList<String>();
-            scopes.add(PDKClient.PDKCLIENT_PERMISSION_READ_PUBLIC);
-            scopes.add(PDKClient.PDKCLIENT_PERMISSION_WRITE_PUBLIC);
-            pinterestService.login(this, scopes)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new Action1<Response<PDKUser>>() {
-                        @Override
-                        public void call(Response<PDKUser> response) {
+        } else if (id == R.id.login) {
+            if(!PDKClient.isAuthenticated()){
+                pinterestService.login(this, scopes)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(response -> {
                             if(response.isSuccessful()){
+                                item.setTitle(R.string.logout);
                                 Timber.d("User login successful :" + response.getValue().getFirstName());
                             }
                             else{
+                                item.setTitle(R.string.login);
                                 Timber.d("User login error: " + response.getError());
                             }
-                        }
-                    });
+                        });
+            }
+            else{
+                PDKClient.getInstance().logout();
+                item.setTitle(R.string.login);
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
