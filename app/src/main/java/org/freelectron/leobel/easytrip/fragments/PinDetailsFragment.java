@@ -111,7 +111,7 @@ public class PinDetailsFragment extends Fragment implements OnMapReadyCallback {
 
         if(place != null){
             metadataName.setText(place.getName());
-            pinNote.setText(String.format("%s, %s", place.getLocality(), place.getCountry()));
+            pinNote.setText(place.getLocality() != null ? String.format("%s, %s", place.getLocality(), place.getCountry()) :place.getCountry() );
         }
         else{
             metadataName.setText("");
