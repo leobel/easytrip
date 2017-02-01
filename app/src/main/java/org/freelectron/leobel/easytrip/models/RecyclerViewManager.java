@@ -1,8 +1,12 @@
 package org.freelectron.leobel.easytrip.models;
 
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+
+import org.freelectron.leobel.easytrip.Utils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -10,6 +14,7 @@ import java.util.List;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Created by leobel on 1/16/17.
@@ -36,6 +41,28 @@ public class RecyclerViewManager<T> {
         this.currentPaginateInfo = paginateInfo;
 
         this.recyclerView.setAdapter(recyclerViewAdapter);
+        this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if(currentPaginateInfo != null){
+                    RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                    int totalItems = recyclerViewAdapter.getItemCount();
+                    int visibleItems = layoutManager.getChildCount();
+                    int firstVisiblePosition;
+                    if(layoutManager instanceof StaggeredGridLayoutManager){
+                        firstVisiblePosition = Utils.min(((StaggeredGridLayoutManager)layoutManager).findFirstVisibleItemPositions(null), 0);
+                    }
+                    else{
+                        firstVisiblePosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+                    }
+                    if(dy > 0 &&!isLoading && (visibleItems + firstVisiblePosition) >= totalItems){
+                        requestItems(currentPaginateInfo, true);
+                    }
+                }
+
+            }
+
+        });
         this.emptyView.setVisibility(View.INVISIBLE);
         this.swipeRefreshLayout.setOnRefreshListener(() -> {
             refreshList();
