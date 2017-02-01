@@ -39,7 +39,7 @@
     <style name="navigationSeparator">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/colorFlightFormLine</item>
+        <item name="android:background">@color/divider</item>
     </style>
 
     <style name="flightInputFormButton" parent="Widget.AppCompat.Button.Borderless.Colored">

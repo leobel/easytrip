@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
-    android:background="@color/colorFlightFormBackground"
+    android:background="@color/colorPrimaryDark"
     tools:context="org.freelectron.leobel.easytrip.FlightFormActivity">
 
 
@@ -21,7 +21,7 @@
             android:layout_height="0dp"
             android:layout_weight="0.45"
             app:actualImageScaleType="centerCrop"
-            android:background="@color/colorAccent"/>
+            android:background="@color/divider"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -78,7 +78,7 @@
                     android:layout_marginBottom="5dp"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:background="@color/colorFlightFormWhite">
+                    android:background="@color/icons">
 
                     <LinearLayout
                         android:orientation="vertical"
@@ -103,7 +103,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_alignTop="@+id/search_flight_from"
                                     android:layout_alignBottom="@+id/search_flight_from"
-                                    android:tint="@color/colorFlightFormIcon"
+                                    android:tint="@color/colorPrimary"
                                     android:src="@drawable/ic_flight_from"/>
 
                                 <!--<TextView-->
@@ -147,7 +147,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_alignTop="@+id/search_flight_to"
                                     android:layout_alignBottom="@+id/search_flight_to"
-                                    android:tint="@color/colorFlightFormIcon"
+                                    android:tint="@color/colorPrimary"
                                     android:src="@drawable/ic_flight_to"/>
 
                                 <!--<TextView-->
@@ -237,7 +237,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_alignTop="@+id/search_flight_departure"
                                         android:layout_alignBottom="@+id/search_flight_departure"
-                                        android:tint="@color/colorFlightFormIcon"
+                                        android:tint="@color/colorPrimary"
                                         android:src="@drawable/ic_flight_date"/>
 
                                     <!--<TextView-->
@@ -280,7 +280,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_alignTop="@+id/search_flight_return"
                                         android:layout_alignBottom="@+id/search_flight_return"
-                                        android:tint="@color/colorFlightFormIcon"
+                                        android:tint="@color/colorPrimary"
                                         android:src="@drawable/ic_flight_date"/>
 
                                     <!--<TextView-->
@@ -332,7 +332,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_alignTop="@+id/search_flight_class"
                                     android:layout_alignBottom="@+id/search_flight_class"
-                                    android:tint="@color/colorFlightFormIcon"
+                                    android:tint="@color/colorPrimary"
                                     android:src="@drawable/ic_cabin_class"/>
 
                                 <!--<TextView-->
@@ -374,7 +374,7 @@
                                 android:layout_height="50dp"
                                 android:layout_marginBottom="5dp"
                                 android:textAllCaps="true"
-                                android:backgroundTint="@color/colorFlightFormButton"
+                                android:backgroundTint="@color/colorPrimary"
                                 android:textColor="#FFFFFF"
                                 android:text="@string/search_flight"/>
                         </RelativeLayout>

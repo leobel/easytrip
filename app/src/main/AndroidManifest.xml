@@ -11,6 +11,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCgNYQS3pNgtN-LT7A5_RtUqqRjAB40myw"/>
         <activity
             android:name=".SearchPlaceActivity"
             android:label="@string/app_name"
@@ -18,8 +21,7 @@
         <activity
             android:name=".PinDetailsActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-            >
+            android:theme="@style/AppTheme.ActionBar.Transparent">
         </activity>
         <activity
             android:name=".HomeActivity"

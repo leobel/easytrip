@@ -85,7 +85,7 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        int statusBarHeight = getStatusBarHeight();
+        int statusBarHeight = Utils.getStatusBarHeight(this);
         layoutParams.setMargins(0, statusBarHeight, 0, 0);
         toolbar.setLayoutParams(layoutParams);
         toolbar.setTitle("");
@@ -339,14 +339,6 @@ public class FlightFormActivity extends AppCompatActivity implements DatePickerL
         }
     }
 
-    private int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
 
     private void setCabinAndPassengers(int adults, int children, int infants, int cabin) {
         int travelers = adults + children + infants;

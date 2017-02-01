@@ -1,82 +1,96 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="org.freelectron.leobel.easytrip.fragments.PinDetailsFragment">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-
-
             <org.freelectron.leobel.easytrip.widgets.PinImageView
                 android:id="@+id/pin_image_details"
                 android:layout_width="match_parent"
                 android:layout_height="430dp"
-                fresco:actualImageScaleType="fitXY"
-                android:background="#828282" />
+                app:actualImageScaleType="fitXY"
+                android:background="@color/divider" />
 
-            <RelativeLayout
-                android:id="@+id/pin_info_container"
-                android:layout_below="@+id/pin_image_details"
+            <TextView
+                android:id="@+id/pin_metadata_name_details"
+                android:layout_above="@+id/pin_note_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp">
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textSize="21sp"
+                android:text="Huntington Beach, California"/>
 
-                <TextView
-                    android:id="@+id/pin_metadata_name_details"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textColor="#000000"
-                    android:textSize="21sp"
-                    android:text="The 6 most Stunning Art Deco Buildings in Los Angeles"/>
-
-                <TextView
-                    android:id="@+id/pin_note_details"
-                    android:layout_below="@+id/pin_metadata_name_details"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="A Guide to the Ultimate California Road Trip."/>
-
-                <TextView
-                    android:id="@+id/pin_board_name_details"
-                    android:layout_below="@+id/pin_note_details"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:text="Culture Trip"/>
-            </RelativeLayout>
-
-
-
-            <RelativeLayout
+            <TextView
+                android:id="@+id/pin_note_details"
+                android:layout_alignBottom="@+id/pin_image_details"
+                android:layout_alignLeft="@+id/pin_metadata_name_details"
+                android:layout_alignRight="@+id/pin_metadata_name_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/pin_info_container"
-                android:gravity="center">
+                android:textColor="#FFFFFF"
+                android:text="Huntington Beach, United States"/>
 
-                <Button
-                    android:id="@+id/find_flight_button"
-                    android:layout_width="wrap_content"
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pin_image_details">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="How to go"/>
+                    android:layout_marginBottom="10dp">
 
-                <Button
-                    android:id="@+id/find_hotel_button"
-                    android:layout_toRightOf="@+id/find_flight_button"
-                    android:layout_alignBaseline="@+id/find_flight_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Where to stay"/>
+                    <Button
+                        android:id="@+id/find_flight_button"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:textColor="#FFFFFF"
+                        android:text="@string/find_way_to_go"/>
 
-            </RelativeLayout>
+                    <Button
+                        android:id="@+id/find_hotel_button"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:textColor="#FFFFFF"
+                        android:text="@string/find_place_to_stay"/>
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.gms.maps.MapView
+                        android:id="@+id/map"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        app:cameraZoom="8"
+                        app:mapType="normal"
+                        app:liteMode="true" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
 
         </RelativeLayout>
 
@@ -84,4 +98,4 @@
 
 
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

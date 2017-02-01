@@ -15,6 +15,7 @@
             android:padding="5dp"
             android:layout_marginRight="10dp"
             android:src="@drawable/ic_place"
+            android:tint="@color/colorPrimaryDark"
             android:layout_centerVertical="true"/>
 
         <LinearLayout
