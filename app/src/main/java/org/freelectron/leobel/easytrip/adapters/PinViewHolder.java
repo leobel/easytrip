@@ -38,8 +38,11 @@ public class PinViewHolder extends RecyclerViewHolder<PDKPin> {
         pinImage.setImageHeight(original.getHeight());
         pinImage.setImageURI(Uri.parse(original.getUrl()));
         PDKPlace place = item.getMetadata().getPlace();
-        if(place!= null) {
+        if(place != null) {
             pinNote.setText(place.getName());
+        }
+        else{
+            pinNote.setText(R.string.unknown_place);
         }
 
     }

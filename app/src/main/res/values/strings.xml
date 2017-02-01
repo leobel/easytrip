@@ -60,4 +60,5 @@
     <string name="find_way_to_go">Flight to go there</string>
     <string name="find_place_to_stay">Place to stay there</string>
     <string name="loading_error">Tap to try again.</string>
+    <string name="unknown_place">Unknown place</string>
 </resources>

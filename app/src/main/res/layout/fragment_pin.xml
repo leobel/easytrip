@@ -20,6 +20,6 @@
         android:layout_below="@+id/pin_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="The scene's all set for romance at @Four Seasons Resort Seychelles."/>
+        android:text="@string/unknown_place"/>
 
 </RelativeLayout>
