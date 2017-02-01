@@ -12,6 +12,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.pinterest.android.pdk.PDKOriginal;
 import com.pinterest.android.pdk.PDKPin;
 import com.pinterest.android.pdk.PDKPlace;
@@ -19,6 +25,8 @@ import com.pinterest.android.pdk.PDKPlace;
 import org.freelectron.leobel.easytrip.R;
 import org.freelectron.leobel.easytrip.models.RecyclerViewManager;
 import org.freelectron.leobel.easytrip.widgets.PinImageView;
+
+import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,7 +36,7 @@ import org.freelectron.leobel.easytrip.widgets.PinImageView;
  * Use the {@link PinDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PinDetailsFragment extends Fragment {
+public class PinDetailsFragment extends Fragment implements OnMapReadyCallback {
     // the fragment initialization parameters
     private static final String ARG_PIN_PARAM = "ARG_PIN_PARAM";
 
@@ -38,6 +46,11 @@ public class PinDetailsFragment extends Fragment {
     TextView metadataName;
     TextView pinNote;
     PinImageView image;
+
+    MapView mapView;
+    private GoogleMap map;
+    private PDKPlace place;
+    private static String MAPVIEW_BUNDLE_KEY = "MAPVIEW_BUNDLE_KEY";
 
 
     public PinDetailsFragment() {
@@ -64,6 +77,7 @@ public class PinDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             pin =  (PDKPin) getArguments().getSerializable(ARG_PIN_PARAM);
+            place = pin.getMetadata().getPlace();
         }
     }
 
@@ -77,13 +91,24 @@ public class PinDetailsFragment extends Fragment {
         pinNote = (TextView) view.findViewById(R.id.pin_note_details);
 
         image = (PinImageView) view.findViewById(R.id.pin_image_details);
+        mapView = (MapView) view.findViewById(R.id.map);
+
+        // *** IMPORTANT ***
+        // MapView requires that the Bundle you pass contain ONLY MapView SDK
+        // objects or sub-Bundles.
+        Bundle mapViewBundle = null;
+        if (savedInstanceState != null) {
+            mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
+        }
+        mapView.onCreate(mapViewBundle);
+        mapView.getMapAsync(this);
 
         PDKOriginal original = pin.getImage().getOriginal();
         image.setImageWidth(original.getWidth());
         image.setImageHeight(original.getHeight());
         image.setImageURI(Uri.parse(original.getUrl()));
 
-        PDKPlace place = pin.getMetadata().getPlace();
+
         if(place != null){
             metadataName.setText(place.getName());
             pinNote.setText(String.format("%s, %s", place.getLocality(), place.getCountry()));
@@ -113,6 +138,19 @@ public class PinDetailsFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+
+        Timber.d("Map ready!!!");
+        if(place != null){
+            LatLng coordinate = new LatLng(place.getLatitude(), place.getLongitude());
+            map.addMarker(new MarkerOptions().position(coordinate).title(place.getName()));
+            map.moveCamera(CameraUpdateFactory.newLatLng(coordinate));
+        }
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -127,4 +165,5 @@ public class PinDetailsFragment extends Fragment {
         void onFindFlight(Uri uri);
         void onFindPlaceToStay();
     }
+
 }

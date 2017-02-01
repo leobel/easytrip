@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="org.freelectron.leobel.easytrip.fragments.PinDetailsFragment">
 
     <ScrollView
@@ -17,7 +17,7 @@
                 android:id="@+id/pin_image_details"
                 android:layout_width="match_parent"
                 android:layout_height="430dp"
-                fresco:actualImageScaleType="fitXY"
+                app:actualImageScaleType="fitXY"
                 android:background="#828282" />
 
             <TextView
@@ -43,27 +43,53 @@
                 android:text="Huntington Beach, United States"/>
 
 
-            <RelativeLayout
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/pin_image_details"
-                android:gravity="center">
+                android:layout_below="@+id/pin_image_details">
 
-                <Button
-                    android:id="@+id/find_flight_button"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="How to go"/>
+                    android:layout_marginBottom="10dp">
 
-                <Button
-                    android:id="@+id/find_hotel_button"
-                    android:layout_toRightOf="@+id/find_flight_button"
-                    android:layout_alignBaseline="@+id/find_flight_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Where to stay"/>
+                    <Button
+                        android:id="@+id/find_flight_button"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/colorFlightFormButton"
+                        android:textColor="#FFFFFF"
+                        android:text="How to go"/>
 
-            </RelativeLayout>
+                    <Button
+                        android:id="@+id/find_hotel_button"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/colorFlightFormButton"
+                        android:textColor="#FFFFFF"
+                        android:text="Where to stay"/>
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <com.google.android.gms.maps.MapView
+                        android:id="@+id/map"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        app:cameraZoom="8"
+                        app:mapType="normal"
+                        app:liteMode="true" />
+                </RelativeLayout>
+
+            </LinearLayout>
 
         </RelativeLayout>
 
