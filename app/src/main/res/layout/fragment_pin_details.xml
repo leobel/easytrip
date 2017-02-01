@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,7 +7,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -18,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="430dp"
                 app:actualImageScaleType="fitXY"
-                android:background="#828282" />
+                android:background="@color/divider" />
 
             <TextView
                 android:id="@+id/pin_metadata_name_details"
@@ -60,25 +61,24 @@
                         android:layout_width="0dp"
                         android:layout_weight="0.5"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/colorFlightFormButton"
+                        android:backgroundTint="@color/colorPrimary"
                         android:textColor="#FFFFFF"
-                        android:text="How to go"/>
+                        android:text="@string/find_way_to_go"/>
 
                     <Button
                         android:id="@+id/find_hotel_button"
                         android:layout_width="0dp"
                         android:layout_weight="0.5"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/colorFlightFormButton"
+                        android:backgroundTint="@color/colorPrimary"
                         android:textColor="#FFFFFF"
-                        android:text="Where to stay"/>
+                        android:text="@string/find_place_to_stay"/>
 
                 </LinearLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
 
                     <com.google.android.gms.maps.MapView
                         android:id="@+id/map"
@@ -87,6 +87,7 @@
                         app:cameraZoom="8"
                         app:mapType="normal"
                         app:liteMode="true" />
+
                 </RelativeLayout>
 
             </LinearLayout>
@@ -97,4 +98,4 @@
 
 
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
