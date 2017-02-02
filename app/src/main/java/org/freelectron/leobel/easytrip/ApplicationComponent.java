@@ -16,6 +16,7 @@ import dagger.Component;
 @Singleton
 @Component(modules = {AppModule.class, ServicesModule.class})
 public interface ApplicationComponent {
+        void inject(BaseActivity activity);
         void inject(HomeActivity activity);
         void inject(SearchPlaceActivity activity);
         void inject(InspireMeFragment activity);

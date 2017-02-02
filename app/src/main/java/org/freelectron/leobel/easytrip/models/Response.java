@@ -2,6 +2,8 @@ package org.freelectron.leobel.easytrip.models;
 
 import com.pinterest.android.pdk.PDKException;
 
+import java.net.ConnectException;
+
 import okhttp3.ResponseBody;
 import rx.Observable;
 
@@ -68,7 +70,7 @@ public class Response<T> {
             case 429:
                 return new Response<>(new TooManyRequestException(message), source);
             case -1:
-                return new Response<>(new InternetConnectionException(message), source);
+                return new Response<>(new ConnectException(message), source);
             default:
                 return new Response<>(new Exception("Server Error – An internal server error has occurred which has been logged."), source);
         }

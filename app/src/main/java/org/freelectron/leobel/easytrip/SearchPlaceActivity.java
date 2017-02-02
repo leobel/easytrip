@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.freelectron.leobel.easytrip.adapters.PlaceRecyclerViewAdapter;
+import org.freelectron.leobel.easytrip.models.InternetConnectionException;
 import org.freelectron.leobel.easytrip.models.PageResponse;
 import org.freelectron.leobel.easytrip.models.PaginateInfo;
 import org.freelectron.leobel.easytrip.models.Place;
@@ -25,6 +26,7 @@ import org.freelectron.leobel.easytrip.services.LocalisationService;
 import org.freelectron.leobel.easytrip.services.PinterestService;
 import org.freelectron.leobel.easytrip.widgets.DividerItemDecoration;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,8 +35,9 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
-public class SearchPlaceActivity extends AppCompatActivity implements RecyclerViewListener<Place> {
+public class SearchPlaceActivity extends BaseActivity implements RecyclerViewListener<Place> {
 
     public static final String PLACE = "PLACE";
     public static final String QUERY = "QUERY";
@@ -150,7 +153,10 @@ public class SearchPlaceActivity extends AppCompatActivity implements RecyclerVi
 
     @Override
     public void onLoadingItemsError(Throwable error) {
-
+        if(error instanceof ConnectException){
+            requireConnectionDialog.show();
+        }
+        Timber.d("Result error: " + error.getMessage());
     }
 
     private void addProgressIndicator() {
