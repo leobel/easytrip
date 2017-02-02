@@ -16,6 +16,7 @@ import org.freelectron.leobel.easytrip.EasyTripApp;
 import org.freelectron.leobel.easytrip.R;
 import org.freelectron.leobel.easytrip.adapters.PinRecyclerViewAdapter;
 import org.freelectron.leobel.easytrip.models.AuthorizationException;
+import org.freelectron.leobel.easytrip.models.InternetConnectionException;
 import org.freelectron.leobel.easytrip.models.PageResponse;
 import org.freelectron.leobel.easytrip.models.PaginateInfo;
 import org.freelectron.leobel.easytrip.models.Realm.BoardRealm;
@@ -64,8 +65,6 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
 
     @Inject
     public RealmService realmService;
-    private AlertDialog requireLoginDialog;
-
 
     public PinListFragment() {
         // Required empty public constructor
@@ -96,24 +95,6 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
             categoryId = getArguments().getInt(ARG_CATEGORY_PARAM);
             boards = realmService.getBoardByCategory(categoryId);
         }
-
-        requireLoginDialog = new AlertDialog.Builder(getActivity())
-                .setMessage(R.string.login_dialog_message)
-                .setNegativeButton(R.string.flight_cabin_passenger_positive_cancel_text, (dialogInterface, i) -> requireLoginDialog.dismiss())
-                .setPositiveButton(R.string.login_dialog_login, (dialogInterface, i) -> {
-                    pinterestService.login(getActivity(), scopes)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(response -> {
-                                if(response.isSuccessful()){
-                                    Timber.d("User login successful :" + response.getValue().getFirstName());
-                                }
-                                else{
-                                    Timber.d("User login error: " + response.getError());
-                                }
-                            });
-                })
-                .create();
     }
 
     @Override
@@ -171,12 +152,6 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    @Override
     public RecyclerViewAdapter getAdapter() {
         return new PinRecyclerViewAdapter(R.layout.fragment_pin);
     }
@@ -204,10 +179,7 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
 
     @Override
     public void onLoadingItemsError(Throwable error) {
-        if(error instanceof AuthorizationException && !requireLoginDialog.isShowing()){
-            requireLoginDialog.show();
-        }
-        Timber.d("Result error: " + error.getMessage());
+        mListener.onLoadingItemsError(error);
     }
 
     /**
@@ -222,5 +194,6 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
      */
     public interface OnPinListInteractionListener {
         void onPinSelected(PDKPin pin);
+        void onLoadingItemsError(Throwable error);
     }
 }

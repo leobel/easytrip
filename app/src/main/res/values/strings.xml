@@ -61,4 +61,9 @@
     <string name="find_place_to_stay">Place to stay there</string>
     <string name="loading_error">Tap to try again.</string>
     <string name="unknown_place">Unknown place</string>
+
+    <!-- Connection -->
+    <string name="require_connection">You are not connected to Internet. Please check your network connection and try again.</string>
+    <string name="require_connection_settings">Settings</string>
+    <string name="require_connection_ok">Ok</string>
 </resources>

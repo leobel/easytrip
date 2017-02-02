@@ -32,6 +32,7 @@ public class PDKException extends Exception {
         if (error != null && error.networkResponse != null && error.networkResponse.data != null) {
             message = new String(error.networkResponse.data);
             _detailMessage = message;
+            _statusCode = error.networkResponse.statusCode;
         }
 
         if (message.length() > 0 && message.startsWith("{")) {
@@ -51,7 +52,7 @@ public class PDKException extends Exception {
 
         // This error happens because the server sends a 401 (Unauthorized) but does not give a "WWW-Authenticate" which is a hint for the client what to do next.
         // The "WWW-Authenticate" Header tells the client which kind of authentication is needed (either Basic or Digest).
-        // This is usually not very useful in headless http clients, but thats how the standard is defined.
+        // This is usually not very useful in headless http clients, but that's how the standard is defined.
         // The error occurs because the lib tries to parse the "WWW-Authenticate" header but can't.
         if (error != null && error.getMessage() != null && error.getMessage().equalsIgnoreCase("java.io.IOException: No authentication challenges found")){
             _detailMessage = "You are not permitted to access that resource";

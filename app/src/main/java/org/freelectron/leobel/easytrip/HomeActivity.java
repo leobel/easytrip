@@ -21,7 +21,9 @@ import com.pinterest.android.pdk.PDKUser;
 
 import org.freelectron.leobel.easytrip.adapters.InspireMeTabPageAdapter;
 import org.freelectron.leobel.easytrip.adapters.TabPageAdapter;
+import org.freelectron.leobel.easytrip.fragments.InspireMeFragment;
 import org.freelectron.leobel.easytrip.models.AuthorizationException;
+import org.freelectron.leobel.easytrip.models.InternetConnectionException;
 import org.freelectron.leobel.easytrip.models.Realm.BoardRealm;
 import org.freelectron.leobel.easytrip.models.Realm.TravelCategoryRealm;
 import org.freelectron.leobel.easytrip.models.Response;
@@ -42,7 +44,7 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, InspireMeFragment.OnPinterestListener {
 
     public static String SELECTED_TAB = "SELECTED_TAB";
 
@@ -56,6 +58,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Inject
     public PinterestService pinterestService;
+
+    private AlertDialog requireLoginDialog;
+    private AlertDialog requireConnectionDialog;
     public static ArrayList<String> scopes = new ArrayList<>();
 
     static {
@@ -109,6 +114,30 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             toggleLogin.setTitle(R.string.logout);
 
         }
+
+        requireLoginDialog = new AlertDialog.Builder(this)
+                .setMessage(R.string.login_dialog_message)
+                .setNegativeButton(R.string.flight_cabin_passenger_positive_cancel_text, (dialogInterface, i) -> requireLoginDialog.dismiss())
+                .setPositiveButton(R.string.login_dialog_login, (dialogInterface, i) -> {
+                    pinterestService.login(this, scopes)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(response -> {
+                                if(response.isSuccessful()){
+                                    Timber.d("User login successful :" + response.getValue().getFirstName());
+                                }
+                                else{
+                                    Timber.d("User login error: " + response.getError());
+                                }
+                            });
+                })
+                .create();
+
+        requireConnectionDialog = new AlertDialog.Builder(this)
+                .setMessage(R.string.require_connection)
+                .setNegativeButton(R.string.require_connection_ok, (dialogInterface, i) -> requireConnectionDialog.dismiss())
+                .setPositiveButton(R.string.require_connection_settings, (dialogInterface, i) -> startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS)))
+                .create();
     }
 
     private static boolean populateDataBase(PreferenceService preferenceService) {
@@ -243,5 +272,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         PDKClient.getInstance().onOauthResponse(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onLoadingItemsError(Throwable error) {
+        if(error instanceof AuthorizationException){
+            requireLoginDialog.show();
+        }
+        else if(error instanceof InternetConnectionException){
+            requireConnectionDialog.show();
+        }
+        Timber.d("Result error: " + error.getMessage());
     }
 }

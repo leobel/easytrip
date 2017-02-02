@@ -67,6 +67,8 @@ public class Response<T> {
                 return new Response<>(new ForbiddenException(message), source);
             case 429:
                 return new Response<>(new TooManyRequestException(message), source);
+            case -1:
+                return new Response<>(new InternetConnectionException(message), source);
             default:
                 return new Response<>(new Exception("Server Error – An internal server error has occurred which has been logged."), source);
         }
