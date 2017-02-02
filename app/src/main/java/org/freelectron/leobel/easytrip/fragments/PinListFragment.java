@@ -193,7 +193,7 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
         if(paginateInfo != null) {
             cursor = (String) paginateInfo.getIndex();
         }
-        return pinterestService.getBoardPins(boards.get(index).getId(), "id,board,link,note,url,counts,image,metadata", cursor)
+        return pinterestService.getBoardPins(boards.get(index).getId(), "id,color,board,link,note,url,counts,image,metadata", cursor)
                 .map(listPageResponse -> {
                     if(!listPageResponse.hasMoreItems() && index < boards.size() - 1){
                         index += 1;

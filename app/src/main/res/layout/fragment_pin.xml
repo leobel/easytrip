@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,10 +10,11 @@
         android:id="@+id/pin_image"
         android:layout_width="match_parent"
         android:layout_height ="200dp"
-        fresco:actualImageScaleType="fitXY"
+        app:actualImageScaleType="fitXY"
         android:layout_centerHorizontal="true"
-        android:background="#828282"
-
+        app:roundAsCircle="false"
+        app:roundedCornerRadius="5dp"
+        app:failureImage="@color/colorAccent"
     />
     <TextView
         android:id="@+id/pin_note"
