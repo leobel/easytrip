@@ -21,6 +21,7 @@ public class InspireMeFragment extends NavigationFragment implements PinListFrag
 
     public static String PIN_FRAGMENT_LIST = "PIN_FRAGMENT_LIST";
     public static String PIN_FRAGMENT_DETAILS = "PIN_FRAGMENT_DETAILS";
+    public static String BOARD_FRAGMENT_DETAILS = "BOARD_FRAGMENT_DETAILS";
 
     private Integer category;
     private PinListFragment fragment;
@@ -88,9 +89,10 @@ public class InspireMeFragment extends NavigationFragment implements PinListFrag
     }
 
     @Override
-    public void onPinSelected(PDKPin pin) {
+    public void onPinSelected(PDKPin pin, String boardId) {
         Intent intent = new Intent(getActivity(), PinDetailsActivity.class);
         intent.putExtra(PIN_FRAGMENT_DETAILS, pin);
+        intent.putExtra(BOARD_FRAGMENT_DETAILS, boardId);
         startActivity(intent);
     }
 

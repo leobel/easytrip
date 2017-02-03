@@ -1,9 +1,13 @@
 package org.freelectron.leobel.easytrip.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +26,25 @@ import com.pinterest.android.pdk.PDKOriginal;
 import com.pinterest.android.pdk.PDKPin;
 import com.pinterest.android.pdk.PDKPlace;
 
+import org.freelectron.leobel.easytrip.EasyTripApp;
 import org.freelectron.leobel.easytrip.R;
+import org.freelectron.leobel.easytrip.adapters.PinRecyclerViewAdapter;
+import org.freelectron.leobel.easytrip.models.PageResponse;
+import org.freelectron.leobel.easytrip.models.PaginateInfo;
+import org.freelectron.leobel.easytrip.models.RecyclerViewAdapter;
+import org.freelectron.leobel.easytrip.models.RecyclerViewListener;
 import org.freelectron.leobel.easytrip.models.RecyclerViewManager;
+import org.freelectron.leobel.easytrip.services.PinterestService;
 import org.freelectron.leobel.easytrip.widgets.PinImageView;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import rx.Observable;
 import timber.log.Timber;
 
 /**
@@ -36,9 +55,11 @@ import timber.log.Timber;
  * Use the {@link PinDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PinDetailsFragment extends Fragment implements OnMapReadyCallback {
-    // the fragment initialization parameters
+public class PinDetailsFragment extends Fragment implements OnMapReadyCallback, RecyclerViewListener<PDKPin> {
     private static final String ARG_PIN_PARAM = "ARG_PIN_PARAM";
+    private static final String ARG_BOARD_PARAM = "ARG_BOARD_PARAM";
+    private static final String ITEMS_LIST = "ITEMS_LIST";
+    private static final String PAGINATE_INFO = "PAGINATE_INFO";
 
     private PDKPin pin;
     private OnPinDetailsInteractionListener mListener;
@@ -51,6 +72,14 @@ public class PinDetailsFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap map;
     private PDKPlace place;
     private static String MAPVIEW_BUNDLE_KEY = "MAPVIEW_BUNDLE_KEY";
+    private TextView abouTextView;
+    private TextView findMoreTextView;
+    private String boardId;
+    private RecyclerViewManager recyclerViewManager;
+
+    @Inject
+    public PinterestService pinterestService;
+
 
 
     public PinDetailsFragment() {
@@ -62,12 +91,14 @@ public class PinDetailsFragment extends Fragment implements OnMapReadyCallback {
      * this fragment using the provided parameters.
      *
      * @param pin Pinterest pin.
+     * @param boardId Pinterest board id.
      * @return A new instance of fragment PinDetailsActivity.
      */
-    public static PinDetailsFragment newInstance(PDKPin pin) {
+    public static PinDetailsFragment newInstance(PDKPin pin, String boardId) {
         PinDetailsFragment fragment = new PinDetailsFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PIN_PARAM, pin);
+        args.putString(ARG_BOARD_PARAM, boardId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,8 +106,12 @@ public class PinDetailsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        EasyTripApp.getInstance().getComponent().inject(this);
+
         if (getArguments() != null) {
             pin =  (PDKPin) getArguments().getSerializable(ARG_PIN_PARAM);
+            boardId = getArguments().getString(ARG_BOARD_PARAM);
             place = pin.getMetadata().getPlace();
         }
     }
@@ -89,9 +124,27 @@ public class PinDetailsFragment extends Fragment implements OnMapReadyCallback {
 
         metadataName = (TextView) view.findViewById(R.id.pin_metadata_name_details);
         pinNote = (TextView) view.findViewById(R.id.pin_note_details);
+        abouTextView = (TextView) view.findViewById(R.id.pin_about_place);
+        findMoreTextView = (TextView) view.findViewById(R.id.pin_find_more_place);
 
         image = (PinImageView) view.findViewById(R.id.pin_image_details);
         mapView = (MapView) view.findViewById(R.id.map);
+
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.pins_recycler_view);
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        View emptyView = view.findViewById(R.id.empty_view_container);
+
+        int columns = getResources().getInteger(R.integer.gallery_columns);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+
+        List<PDKPin> items = null;
+        PaginateInfo<String> paginateInfo = null;
+        if(savedInstanceState != null){
+            items = (ArrayList<PDKPin>)savedInstanceState.getSerializable(ITEMS_LIST);
+            paginateInfo = (PaginateInfo<String>) savedInstanceState.getSerializable(PAGINATE_INFO);
+        }
+        recyclerViewManager = new RecyclerViewManager<>(this, recyclerView, swipeRefreshLayout, emptyView, items, paginateInfo);
 
         // *** IMPORTANT ***
         // MapView requires that the Bundle you pass contain ONLY MapView SDK
@@ -111,14 +164,31 @@ public class PinDetailsFragment extends Fragment implements OnMapReadyCallback {
 
         if(place != null){
             metadataName.setText(place.getName());
-            pinNote.setText(place.getLocality() != null ? String.format("%s, %s", place.getLocality(), place.getCountry()) :place.getCountry() );
+            pinNote.setText(String.format("%s, %s", place.getLocality() != null ? place.getLocality() : place.getName() , place.getCountry()));
+            abouTextView.setText(String.format(getString(R.string.pin_about_place), place.getName()));
+
+            findMoreTextView.setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(place.getSourceUrl()));
+                startActivity(intent);
+            });
         }
         else{
             metadataName.setText("");
             pinNote.setText("");
+            abouTextView.setText(String.format(getString(R.string.pin_about_place), ""));
         }
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(recyclerViewManager != null){
+            outState.putSerializable(ITEMS_LIST, (ArrayList<PDKPin>)recyclerViewManager.getItems());
+            outState.putSerializable(PAGINATE_INFO, recyclerViewManager.getPaginateInfo());
+        }
     }
 
     @Override
@@ -148,6 +218,40 @@ public class PinDetailsFragment extends Fragment implements OnMapReadyCallback {
             map.addMarker(new MarkerOptions().position(coordinate).title(place.getName()));
             map.moveCamera(CameraUpdateFactory.newLatLng(coordinate));
         }
+
+    }
+
+    @Override
+    public RecyclerViewAdapter getAdapter() {
+        return new PinRecyclerViewAdapter(R.layout.fragment_pin);
+    }
+
+    @Override
+    public void itemClick(PDKPin item) {
+
+    }
+
+    @Override
+    public Observable<PageResponse<List<PDKPin>>> getItems(PaginateInfo<?> paginateInfo) {
+        String cursor = "";
+        if(paginateInfo != null) {
+            cursor = (String) paginateInfo.getIndex();
+        }
+        return pinterestService.getBoardPins(boardId, getString(R.string.pin_details_query), cursor)
+                .map(listPageResponse -> {
+                    if(listPageResponse.isSuccessful()){
+                        List<PDKPin> pins = listPageResponse.getValue();
+                        pins.remove(pin);
+                        return new PageResponse<>(pins, listPageResponse.getPaginateInfo(), listPageResponse.getSource());
+                    }
+                    else{
+                        return listPageResponse;
+                    }
+                });
+    }
+
+    @Override
+    public void onLoadingItemsError(Throwable error) {
 
     }
 

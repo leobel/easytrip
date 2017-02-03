@@ -250,4 +250,14 @@ public class PDKPin extends PDKModel {
     public String getOriginalLink() {
         return originalLink;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof PDKPin){
+            return ((PDKPin)o).getUid().equals(getUid());
+        }
+        else{
+            return false;
+        }
+    }
 }

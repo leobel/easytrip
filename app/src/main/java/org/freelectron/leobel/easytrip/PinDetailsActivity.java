@@ -16,6 +16,7 @@ import com.pinterest.android.pdk.PDKPin;
 
 import org.freelectron.leobel.easytrip.fragments.PinDetailsFragment;
 
+import static org.freelectron.leobel.easytrip.fragments.InspireMeFragment.BOARD_FRAGMENT_DETAILS;
 import static org.freelectron.leobel.easytrip.fragments.InspireMeFragment.PIN_FRAGMENT_DETAILS;
 
 public class PinDetailsActivity extends AppCompatActivity implements PinDetailsFragment.OnPinDetailsInteractionListener {
@@ -40,8 +41,9 @@ public class PinDetailsActivity extends AppCompatActivity implements PinDetailsF
 
         Intent intent = getIntent();
         PDKPin pin = (PDKPin) intent.getSerializableExtra(PIN_FRAGMENT_DETAILS);
+        String boardId = intent.getStringExtra(BOARD_FRAGMENT_DETAILS);
 
-        org.freelectron.leobel.easytrip.fragments.PinDetailsFragment fragment = org.freelectron.leobel.easytrip.fragments.PinDetailsFragment.newInstance(pin);
+        PinDetailsFragment fragment = PinDetailsFragment.newInstance(pin, boardId);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.pin_details, fragment);
