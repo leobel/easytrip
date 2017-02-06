@@ -21,6 +21,7 @@ public class InspireMeFragment extends NavigationFragment implements PinListFrag
 
     public static String PIN_FRAGMENT_LIST = "PIN_FRAGMENT_LIST";
     public static String PIN_FRAGMENT_DETAILS = "PIN_FRAGMENT_DETAILS";
+    public static String BOARD_FRAGMENT_DETAILS = "BOARD_FRAGMENT_DETAILS";
 
     private Integer category;
     private PinListFragment fragment;
@@ -72,14 +73,10 @@ public class InspireMeFragment extends NavigationFragment implements PinListFrag
         if(getArguments() != null){
             category = getArguments().getInt(ARG_CATEGORY_PARAM);
         }
-        List<PDKPin> items = null;
-        if(savedInstanceState != null){
-            items = (ArrayList<PDKPin>)savedInstanceState.getSerializable(ITEMS_LIST);
-        }
 
         fragment = (PinListFragment) findFragment(PIN_FRAGMENT_LIST);
         if(fragment == null){
-            fragment = PinListFragment.newInstance(category, items);
+            fragment = PinListFragment.newInstance(category);
             addFragment(fragment, PIN_FRAGMENT_LIST);
         }
         else{
@@ -88,9 +85,10 @@ public class InspireMeFragment extends NavigationFragment implements PinListFrag
     }
 
     @Override
-    public void onPinSelected(PDKPin pin) {
+    public void onPinSelected(PDKPin pin, String boardId) {
         Intent intent = new Intent(getActivity(), PinDetailsActivity.class);
         intent.putExtra(PIN_FRAGMENT_DETAILS, pin);
+        intent.putExtra(BOARD_FRAGMENT_DETAILS, boardId);
         startActivity(intent);
     }
 

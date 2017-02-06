@@ -77,7 +77,7 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
      * @param categoryId Travel categoryId.
      * @return A new instance of fragment PinListFragment.
      */
-    public static PinListFragment newInstance(Integer categoryId, List<PDKPin> items) {
+    public static PinListFragment newInstance(Integer categoryId) {
         PinListFragment fragment = new PinListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_CATEGORY_PARAM, categoryId);
@@ -158,7 +158,7 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
 
     @Override
     public void itemClick(PDKPin pin) {
-        mListener.onPinSelected(pin);
+        mListener.onPinSelected(pin, boards.get(index).getId());
 
     }
 
@@ -168,7 +168,7 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
         if(paginateInfo != null) {
             cursor = (String) paginateInfo.getIndex();
         }
-        return pinterestService.getBoardPins(boards.get(index).getId(), "id,color,board,link,note,url,counts,image,metadata", cursor)
+        return pinterestService.getBoardPins(boards.get(index).getId(), getString(R.string.pin_list_query), cursor)
                 .map(listPageResponse -> {
                     if(!listPageResponse.hasMoreItems() && index < boards.size() - 1){
                         index += 1;
@@ -193,7 +193,7 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnPinListInteractionListener {
-        void onPinSelected(PDKPin pin);
+        void onPinSelected(PDKPin pin, String boardId);
         void onLoadingItemsError(Throwable error);
     }
 }
