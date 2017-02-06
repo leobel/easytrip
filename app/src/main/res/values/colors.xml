@@ -9,6 +9,7 @@
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
     <color name="colorTranslucentStatusBar">#21000000</color>
+    <color name="colorTranslucentRelatedPin">#BB000000</color>
     <!--<color name="colorFlightFormBackground">#36517E</color>-->
     <!--<color name="colorFlightFormWhite">#FAFAFA</color>-->
     <!--<color name="colorFlightFormLine">#E1E1E1</color>-->

@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="org.freelectron.leobel.easytrip.fragments.PinDetailsFragment">
 
-    <android.support.v4.widget.NestedScrollView
+    <ScrollView
+        android:id="@+id/pin_details_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fillViewport="true">
@@ -137,7 +138,6 @@
                         </LinearLayout>
                     </RelativeLayout>
 
-
                 </LinearLayout>
 
                 <View style="@style/navigationSeparator"
@@ -151,35 +151,115 @@
                     android:textColor="@color/colorPrimaryText"
                     android:text="@string/pin_related_place"/>
 
-                <RelativeLayout
+                <LinearLayout
+                    android:id="@+id/pin_related_preview"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="350dp">
+                    android:layout_marginBottom="10dp"
+                    android:layout_height="50dp">
 
-                    <android.support.v4.widget.SwipeRefreshLayout
-                        android:id="@+id/swipe_refresh_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:layout_width="50dp"
+                        android:layout_height ="match_parent"
+                        android:layout_marginRight="5dp"
+                        app:roundAsCircle="true"
+                        app:failureImage="@color/colorAccent"
+                        app:placeholderImage="@color/divider"/>
 
-                        <android.support.v7.widget.RecyclerView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentStart="true"
-                            android:id="@+id/pins_recycler_view"
-                            tools:context="org.freelectron.leobel.easytrip.fragments.PinDetailsFragment"
-                            tools:listitem="@layout/fragment_pin" />
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:layout_width="50dp"
+                        android:layout_height ="match_parent"
+                        android:layout_marginRight="5dp"
+                        app:roundAsCircle="true"
+                        app:failureImage="@color/colorAccent"
+                        app:placeholderImage="@color/divider"/>
 
-                    </android.support.v4.widget.SwipeRefreshLayout>
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:layout_width="50dp"
+                        android:layout_height ="match_parent"
+                        android:layout_marginRight="5dp"
+                        app:roundAsCircle="true"
+                        app:failureImage="@color/colorAccent"
+                        app:placeholderImage="@color/divider"/>
 
-                    <include layout="@layout/recycler_error_list" />
+                    <Button
+                        android:id="@+id/pin_show_related"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/ic_related_pins"
+                        android:backgroundTint="@color/colorAccent"
+                        android:textColor="@color/colorAccent"
+                        android:padding="10dp"
+                        android:textSize="10sp"
+                        android:text="+50"/>
 
-                </RelativeLayout>
+                </LinearLayout>
 
             </LinearLayout>
 
         </RelativeLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+    </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/pin_related_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:background="@color/colorTranslucentStatusBar"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <ImageButton
+                    android:id="@+id/pin_related_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/ic_close"
+                    android:backgroundTint="#FFFFFF"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <android.support.v4.widget.SwipeRefreshLayout
+                    android:id="@+id/swipe_refresh_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:id="@+id/pins_recycler_view"
+                        tools:context="org.freelectron.leobel.easytrip.fragments.PinDetailsFragment"
+                        tools:listitem="@layout/fragment_pin" />
+
+                </android.support.v4.widget.SwipeRefreshLayout>
+
+                <include layout="@layout/recycler_error_list" />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 
 

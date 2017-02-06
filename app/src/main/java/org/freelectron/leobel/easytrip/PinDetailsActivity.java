@@ -21,6 +21,9 @@ import static org.freelectron.leobel.easytrip.fragments.InspireMeFragment.PIN_FR
 
 public class PinDetailsActivity extends AppCompatActivity implements PinDetailsFragment.OnPinDetailsInteractionListener {
 
+    private static final String PIN_DETAILS_TAG = "PIN_DETAILS_TAG";
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +31,7 @@ public class PinDetailsActivity extends AppCompatActivity implements PinDetailsF
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         int statusBarHeight = Utils.getStatusBarHeight(this);
@@ -43,10 +46,13 @@ public class PinDetailsActivity extends AppCompatActivity implements PinDetailsF
         PDKPin pin = (PDKPin) intent.getSerializableExtra(PIN_FRAGMENT_DETAILS);
         String boardId = intent.getStringExtra(BOARD_FRAGMENT_DETAILS);
 
-        PinDetailsFragment fragment = PinDetailsFragment.newInstance(pin, boardId);
         FragmentManager fragmentManager = getSupportFragmentManager();
+        PinDetailsFragment fragment = (PinDetailsFragment) fragmentManager.findFragmentByTag(PIN_DETAILS_TAG);
+        if(fragment == null){
+            fragment = PinDetailsFragment.newInstance(pin, boardId);
+        }
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.pin_details, fragment);
+        transaction.replace(R.id.pin_details, fragment, PIN_DETAILS_TAG);
         transaction.commit();
     }
 
@@ -65,5 +71,15 @@ public class PinDetailsActivity extends AppCompatActivity implements PinDetailsF
     @Override
     public void onFindPlaceToStay() {
 
+    }
+
+    @Override
+    public void onSelectRelatedPins() {
+        toolbar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onCloseRelatedPins() {
+        toolbar.setVisibility(View.VISIBLE);
     }
 }

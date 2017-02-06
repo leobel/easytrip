@@ -77,7 +77,7 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
      * @param categoryId Travel categoryId.
      * @return A new instance of fragment PinListFragment.
      */
-    public static PinListFragment newInstance(Integer categoryId, List<PDKPin> items) {
+    public static PinListFragment newInstance(Integer categoryId) {
         PinListFragment fragment = new PinListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_CATEGORY_PARAM, categoryId);

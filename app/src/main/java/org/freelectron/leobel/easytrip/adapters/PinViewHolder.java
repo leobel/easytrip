@@ -15,6 +15,7 @@ import com.pinterest.android.pdk.PDKPin;
 import com.pinterest.android.pdk.PDKPlace;
 
 import org.freelectron.leobel.easytrip.R;
+import org.freelectron.leobel.easytrip.Utils;
 import org.freelectron.leobel.easytrip.models.RecyclerViewHolder;
 import org.freelectron.leobel.easytrip.widgets.PinImageView;
 
@@ -39,19 +40,7 @@ public class PinViewHolder extends RecyclerViewHolder<PDKPin> {
 
     @Override
     public void updateFrom(PDKPin item) {
-        PDKOriginal original = item.getImage().getOriginal();
-        pinImage.setImageWidth(original.getWidth());
-        pinImage.setImageHeight(original.getHeight());
-
-        GenericDraweeHierarchy hierarchy = pinImage.getHierarchy();
-        if(item.getColor() != null){
-            int color= Color.parseColor(item.getColor());
-            hierarchy.setPlaceholderImage(new ColorDrawable(color));
-        }
-        else{
-            hierarchy.setPlaceholderImage(R.color.divider);
-        }
-        pinImage.setImageURI(Uri.parse(original.getUrl()));
+        Utils.setPinImage(item, pinImage);
         PDKPlace place = item.getMetadata().getPlace();
         if(place != null) {
             pinNote.setText(place.getName());

@@ -8,11 +8,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.TypedValue;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -22,6 +24,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.pinterest.android.pdk.PDKBoard;
 import com.pinterest.android.pdk.PDKOriginal;
 import com.pinterest.android.pdk.PDKPin;
 import com.pinterest.android.pdk.PDKPlace;
@@ -38,13 +41,14 @@ import org.freelectron.leobel.easytrip.services.PinterestService;
 import org.freelectron.leobel.easytrip.widgets.PinImageView;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 /**
@@ -60,6 +64,7 @@ public class PinDetailsFragment extends Fragment implements OnMapReadyCallback, 
     private static final String ARG_BOARD_PARAM = "ARG_BOARD_PARAM";
     private static final String ITEMS_LIST = "ITEMS_LIST";
     private static final String PAGINATE_INFO = "PAGINATE_INFO";
+    private static final String RELATED_PIN_VISIBILITY = "RELATED_PIN_VISIBILITY";
 
     private PDKPin pin;
     private OnPinDetailsInteractionListener mListener;
@@ -79,8 +84,14 @@ public class PinDetailsFragment extends Fragment implements OnMapReadyCallback, 
 
     @Inject
     public PinterestService pinterestService;
-
-
+    private ViewGroup relatedPinView;
+    private Button relatedPinButton;
+    private static int RELATED_PIN_COUNT = 3;
+    private Subscription boardSubscription;
+    private View relatedView;
+    private ImageButton relatedPinClose;
+    private View pintDetailsContainer;
+    private boolean showingRelatedPins;
 
     public PinDetailsFragment() {
         // Required empty public constructor
@@ -122,6 +133,7 @@ public class PinDetailsFragment extends Fragment implements OnMapReadyCallback, 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_pin_details, container, false);
 
+        pintDetailsContainer = view.findViewById(R.id.pin_details_container);
         metadataName = (TextView) view.findViewById(R.id.pin_metadata_name_details);
         pinNote = (TextView) view.findViewById(R.id.pin_note_details);
         abouTextView = (TextView) view.findViewById(R.id.pin_about_place);
@@ -129,6 +141,10 @@ public class PinDetailsFragment extends Fragment implements OnMapReadyCallback, 
 
         image = (PinImageView) view.findViewById(R.id.pin_image_details);
         mapView = (MapView) view.findViewById(R.id.map);
+        relatedPinView = (ViewGroup) view.findViewById(R.id.pin_related_preview);
+        relatedPinButton = (Button) view.findViewById(R.id.pin_show_related);
+        relatedView = view.findViewById(R.id.pin_related_layout);
+        relatedPinClose = (ImageButton) view.findViewById(R.id.pin_related_close);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.pins_recycler_view);
         SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
@@ -140,10 +156,21 @@ public class PinDetailsFragment extends Fragment implements OnMapReadyCallback, 
 
         List<PDKPin> items = null;
         PaginateInfo<String> paginateInfo = null;
+        int relatedPinsVisbility = View.GONE;
         if(savedInstanceState != null){
             items = (ArrayList<PDKPin>)savedInstanceState.getSerializable(ITEMS_LIST);
             paginateInfo = (PaginateInfo<String>) savedInstanceState.getSerializable(PAGINATE_INFO);
+            relatedPinsVisbility = savedInstanceState.getInt(RELATED_PIN_VISIBILITY);
+            updateRelatedPinsPreview(items);
         }
+
+        if(relatedPinsVisbility == view.GONE){
+            hideRelatedPins();
+        }
+        else{
+            showRelatedPins();
+        }
+
         recyclerViewManager = new RecyclerViewManager<>(this, recyclerView, swipeRefreshLayout, emptyView, items, paginateInfo);
 
         // *** IMPORTANT ***
@@ -179,7 +206,49 @@ public class PinDetailsFragment extends Fragment implements OnMapReadyCallback, 
             abouTextView.setText(String.format(getString(R.string.pin_about_place), ""));
         }
 
+        relatedPinButton.setOnClickListener(v -> {
+            showRelatedPins();
+
+        });
+
+        relatedPinClose.setOnClickListener(v -> {
+            hideRelatedPins();
+        });
+
+        boardSubscription =  pinterestService.getBoard(boardId, getString(R.string.board_details_query))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(pdkBoardResponse -> {
+                    if(pdkBoardResponse.isSuccessful()){
+                        int pins = pdkBoardResponse.getValue().getPinsCount() - 1;
+                        if(pins - RELATED_PIN_COUNT > 0){
+                            relatedPinButton.setText(String.format(getString(R.string.pin_related_count), "+", pins - RELATED_PIN_COUNT));
+                        }
+                        else relatedPinButton.setText(String.format(getString(R.string.pin_related_count), "", pins));
+                    }
+                });
+
         return view;
+    }
+
+    private void hideRelatedPins() {
+        relatedView.setVisibility(View.GONE);
+        mListener.onCloseRelatedPins();
+        pintDetailsContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void showRelatedPins() {
+        mListener.onSelectRelatedPins();
+        pintDetailsContainer.setVisibility(View.INVISIBLE);
+        relatedView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(boardSubscription != null && !boardSubscription.isUnsubscribed()){
+            boardSubscription.unsubscribe();
+        }
     }
 
     @Override
@@ -189,6 +258,7 @@ public class PinDetailsFragment extends Fragment implements OnMapReadyCallback, 
             outState.putSerializable(ITEMS_LIST, (ArrayList<PDKPin>)recyclerViewManager.getItems());
             outState.putSerializable(PAGINATE_INFO, recyclerViewManager.getPaginateInfo());
         }
+        outState.putInt(RELATED_PIN_VISIBILITY, relatedView.getVisibility());
     }
 
     @Override
@@ -241,7 +311,10 @@ public class PinDetailsFragment extends Fragment implements OnMapReadyCallback, 
                 .map(listPageResponse -> {
                     if(listPageResponse.isSuccessful()){
                         List<PDKPin> pins = listPageResponse.getValue();
-                        pins.remove(pin);
+                        if(paginateInfo == null){ //check only when not are scrolling the list
+                            pins.remove(pin);
+                            updateRelatedPinsPreview(pins);
+                        }
                         return new PageResponse<>(pins, listPageResponse.getPaginateInfo(), listPageResponse.getSource());
                     }
                     else{
@@ -249,6 +322,23 @@ public class PinDetailsFragment extends Fragment implements OnMapReadyCallback, 
                     }
                 });
     }
+
+    private void updateRelatedPinsPreview(List<PDKPin> pins) {
+        int i = 0;
+        for(;i < pins.size() && i < RELATED_PIN_COUNT; i ++){
+            PDKPin item = pins.get(i);
+            SimpleDraweeView pinImage = (SimpleDraweeView) relatedPinView.getChildAt(i);
+            pinImage.setVisibility(View.VISIBLE);
+            pinImage.setImageURI(Uri.parse(item.getImage().getOriginal().getUrl()));
+        }
+
+        if(i < RELATED_PIN_COUNT){
+            do{
+                relatedPinView.getChildAt(i++).setVisibility(View.GONE);
+            }while (i < RELATED_PIN_COUNT);
+        }
+    }
+
 
     @Override
     public void onLoadingItemsError(Throwable error) {
@@ -268,6 +358,8 @@ public class PinDetailsFragment extends Fragment implements OnMapReadyCallback, 
     public interface OnPinDetailsInteractionListener {
         void onFindFlight(Uri uri);
         void onFindPlaceToStay();
+        void onSelectRelatedPins();
+        void onCloseRelatedPins();
     }
 
 }

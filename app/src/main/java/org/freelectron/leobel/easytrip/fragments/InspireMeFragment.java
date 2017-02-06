@@ -73,14 +73,10 @@ public class InspireMeFragment extends NavigationFragment implements PinListFrag
         if(getArguments() != null){
             category = getArguments().getInt(ARG_CATEGORY_PARAM);
         }
-        List<PDKPin> items = null;
-        if(savedInstanceState != null){
-            items = (ArrayList<PDKPin>)savedInstanceState.getSerializable(ITEMS_LIST);
-        }
 
         fragment = (PinListFragment) findFragment(PIN_FRAGMENT_LIST);
         if(fragment == null){
-            fragment = PinListFragment.newInstance(category, items);
+            fragment = PinListFragment.newInstance(category);
             addFragment(fragment, PIN_FRAGMENT_LIST);
         }
         else{
