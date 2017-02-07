@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+      apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'realm-android'
 apply plugin: 'me.tatarka.retrolambda'
@@ -18,6 +18,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled  true
 
         buildConfigField("String", "SKY_SCANNER_BASE_API_URL", "\"http://partners.api.skyscanner.net/apiservices/\"")
         buildConfigField("String", "SKY_SCANNER_API_KEY", "\"prtl6749387986743898559646983194\"")
