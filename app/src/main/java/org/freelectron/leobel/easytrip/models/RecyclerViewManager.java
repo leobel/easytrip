@@ -31,6 +31,7 @@ public class RecyclerViewManager<T> {
     protected Subscription pendingRequest;
     protected PaginateInfo<?> currentPaginateInfo;
     protected boolean isLoading;
+    protected boolean hasMoreItems;
 
     public RecyclerViewManager(RecyclerViewListener<T> listener, RecyclerView recyclerView, SwipeRefreshLayout swipeRefreshLayout, View emptyView, List<T> items, PaginateInfo<?> paginateInfo){
         this.listener = listener;
@@ -44,21 +45,7 @@ public class RecyclerViewManager<T> {
         this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if(currentPaginateInfo != null){
-                    RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-                    int totalItems = recyclerViewAdapter.getItemCount();
-                    int visibleItems = layoutManager.getChildCount();
-                    int firstVisiblePosition;
-                    if(layoutManager instanceof StaggeredGridLayoutManager){
-                        firstVisiblePosition = Utils.min(((StaggeredGridLayoutManager)layoutManager).findFirstVisibleItemPositions(null), 0);
-                    }
-                    else{
-                        firstVisiblePosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
-                    }
-                    if(dy > 0 &&!isLoading && (visibleItems + firstVisiblePosition) >= totalItems){
-                        requestItems(currentPaginateInfo, true);
-                    }
-                }
+                RecyclerViewManager.this.onScrolled(recyclerView, dy);
 
             }
 
@@ -81,10 +68,41 @@ public class RecyclerViewManager<T> {
         }
     }
 
-    private void refreshList() {
+    private void onScrolled(RecyclerView recyclerView, int dy) {
+        if(hasMoreItems()){
+            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+            int totalItems = recyclerViewAdapter.getItemCount();
+            int visibleItems = layoutManager.getChildCount();
+            int firstVisiblePosition;
+            if(layoutManager instanceof StaggeredGridLayoutManager){
+                firstVisiblePosition = Utils.min(((StaggeredGridLayoutManager)layoutManager).findFirstVisibleItemPositions(null), 0);
+            }
+            else{
+                firstVisiblePosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+            }
+            if(dy > 0 &&!isLoading && (visibleItems + firstVisiblePosition) >= totalItems){
+                requestItems(currentPaginateInfo, true);
+            }
+        }
+    }
+
+    protected boolean hasMoreItems() {
+        return currentPaginateInfo != null;
+    }
+
+    protected void setHasMoreItems(PageResponse<List<T>> response){
+        currentPaginateInfo = response.getPaginateInfo();
+    }
+
+
+    protected void refreshList() {
         currentPaginateInfo = null;
         unSubscribe();
         requestItems(currentPaginateInfo, false);
+    }
+
+    protected void setCurrentPaginateInfo(PaginateInfo<?> paginateInfo){
+        currentPaginateInfo = paginateInfo;
     }
 
     public void requestItems(PaginateInfo<?> paginateInfo, boolean append) {
@@ -104,7 +122,7 @@ public class RecyclerViewManager<T> {
                         else{
                             recyclerViewAdapter.setItems(response.getValue());
                         }
-                        currentPaginateInfo = response.getPaginateInfo();
+                        setHasMoreItems(response);
                     }
                     else{
                         emptyView.setVisibility(View.VISIBLE);

@@ -3,7 +3,6 @@ package org.freelectron.leobel.easytrip.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -15,8 +14,8 @@ import com.pinterest.android.pdk.PDKPin;
 import org.freelectron.leobel.easytrip.EasyTripApp;
 import org.freelectron.leobel.easytrip.R;
 import org.freelectron.leobel.easytrip.adapters.PinRecyclerViewAdapter;
-import org.freelectron.leobel.easytrip.models.AuthorizationException;
-import org.freelectron.leobel.easytrip.models.InternetConnectionException;
+import org.freelectron.leobel.easytrip.models.BoardIndex;
+import org.freelectron.leobel.easytrip.models.BoardRecyclerViewManager;
 import org.freelectron.leobel.easytrip.models.PageResponse;
 import org.freelectron.leobel.easytrip.models.PaginateInfo;
 import org.freelectron.leobel.easytrip.models.Realm.BoardRealm;
@@ -32,11 +31,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import timber.log.Timber;
-
-import static org.freelectron.leobel.easytrip.HomeActivity.scopes;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,12 +47,11 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
     private static final String PAGINATE_INFO = "PAGINATE_INFO";
     private static final String INDEX = "INDEX";
 
-    RecyclerViewManager<PDKPin> recyclerViewManager;
+    BoardRecyclerViewManager<PDKPin> recyclerViewManager;
     private OnPinListInteractionListener mListener;
 
     private Integer categoryId;
     private List<BoardRealm> boards;
-    private int index;
 
     @Inject
     public PinterestService pinterestService;
@@ -114,13 +107,14 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
         recyclerView.setLayoutManager(layoutManager);
 
         List<PDKPin> items = null;
-        PaginateInfo<String> paginateInfo = null;
+        PaginateInfo<BoardIndex> paginateInfo = null;
+        int index = 0;
         if(savedInstanceState != null){
             items = (ArrayList<PDKPin>)savedInstanceState.getSerializable(ITEMS_LIST);
-            paginateInfo = (PaginateInfo<String>) savedInstanceState.getSerializable(PAGINATE_INFO);
+            paginateInfo = (PaginateInfo<BoardIndex>) savedInstanceState.getSerializable(PAGINATE_INFO);
             index = savedInstanceState.getInt(INDEX);
         }
-        recyclerViewManager = new RecyclerViewManager<>(this, recyclerView, swipeRefreshLayout, emptyView, items, paginateInfo);
+        recyclerViewManager = new BoardRecyclerViewManager<>(this, recyclerView, swipeRefreshLayout, emptyView, items, paginateInfo, boards, index);
 
         return view;
     }
@@ -147,7 +141,7 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
         if(recyclerViewManager != null){
             outState.putSerializable(ITEMS_LIST, (ArrayList<PDKPin>)recyclerViewManager.getItems());
             outState.putSerializable(PAGINATE_INFO, recyclerViewManager.getPaginateInfo());
-            outState.putInt(INDEX, index);
+            outState.putInt(INDEX, recyclerViewManager.getBoardIndex());
         }
     }
 
@@ -158,23 +152,20 @@ public class PinListFragment extends Fragment implements RecyclerViewListener<PD
 
     @Override
     public void itemClick(PDKPin pin) {
-        mListener.onPinSelected(pin, boards.get(index).getId());
+        mListener.onPinSelected(pin, pin.getBoard().getUid());
 
     }
 
     @Override
     public Observable<PageResponse<List<PDKPin>>> getItems(PaginateInfo<?> paginateInfo) {
         String cursor = "";
+        int index = 0;
         if(paginateInfo != null) {
-            cursor = (String) paginateInfo.getIndex();
+            BoardIndex boardIndex = (BoardIndex) paginateInfo.getIndex();
+            index = boardIndex.getBoardIndex();
+            cursor = boardIndex.getCursor();
         }
-        return pinterestService.getBoardPins(boards.get(index).getId(), getString(R.string.pin_list_query), cursor)
-                .map(listPageResponse -> {
-                    if(!listPageResponse.hasMoreItems() && index < boards.size() - 1){
-                        index += 1;
-                    }
-                    return listPageResponse;
-                });
+        return pinterestService.getBoardPins(boards.get(index).getId(), getString(R.string.pin_list_query), cursor);
     }
 
     @Override

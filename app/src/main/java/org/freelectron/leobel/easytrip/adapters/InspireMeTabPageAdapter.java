@@ -32,6 +32,7 @@ public class InspireMeTabPageAdapter extends FragmentPagerAdapter {
     static {
         HashMap<String, String> lonelyBoards = new HashMap<>();
         lonelyBoards.put("leobelizquierdo/california-trip", "California Trip");
+        lonelyBoards.put("leobelizquierdo/surfing", "Surfing");
         boards[0] = lonelyBoards;
 
         HashMap<String, String> adventureBoards = new HashMap<>();

@@ -30,7 +30,6 @@ public class SearchViewManager<T> extends RecyclerViewManager<T> {
     private final SearchView searchView;
     private Subscription searchViewSubscription;
     private String query;
-    boolean trigger;
 
     public SearchViewManager(RecyclerViewListener<T> listener, SearchView searchView, RecyclerView recyclerView, SwipeRefreshLayout swipeRefreshLayout, View emptyView, List<T> items, String query) {
         super(listener, recyclerView, swipeRefreshLayout, emptyView, items, null);

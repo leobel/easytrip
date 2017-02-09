@@ -65,7 +65,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
         EasyTripApp.getInstance().getComponent().inject(this);
 
         if(!preferenceService.isDataBaseCreated()){
-            if(populateDataBase(preferenceService)){
+            if(populateDataBase()){
                 preferenceService.setDataBaseCreated(true);
             }
         }
@@ -107,7 +107,7 @@ public class HomeActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
-    private static boolean populateDataBase(PreferenceService preferenceService) {
+    private static boolean populateDataBase() {
         Realm realm = Realm.getDefaultInstance();
         try{
             realm.beginTransaction();
