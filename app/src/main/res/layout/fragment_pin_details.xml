@@ -1,0 +1,266 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="org.freelectron.leobel.easytrip.fragments.PinDetailsFragment">
+
+    <ScrollView
+        android:id="@+id/pin_details_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <org.freelectron.leobel.easytrip.widgets.PinImageView
+                android:id="@+id/pin_image_details"
+                android:layout_width="match_parent"
+                android:layout_height="430dp"
+                app:actualImageScaleType="fitXY"
+                android:background="@color/divider" />
+
+            <TextView
+                android:id="@+id/pin_metadata_name_details"
+                android:layout_above="@+id/pin_note_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textSize="21sp"
+                android:text="Huntington Beach, California"/>
+
+            <TextView
+                android:id="@+id/pin_note_details"
+                android:layout_alignBottom="@+id/pin_image_details"
+                android:layout_alignLeft="@+id/pin_metadata_name_details"
+                android:layout_alignRight="@+id/pin_metadata_name_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:text="Huntington Beach, United States"/>
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_below="@+id/pin_image_details">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp">
+
+                    <Button
+                        android:id="@+id/find_flight_button"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:textColor="#FFFFFF"
+                        android:text="@string/find_way_to_go"/>
+
+                    <Button
+                        android:id="@+id/find_hotel_button"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:textColor="#FFFFFF"
+                        android:text="@string/find_place_to_stay"/>
+
+                </LinearLayout>
+
+                <View style="@style/navigationSeparator"
+                    android:layout_marginBottom="10dp"/>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <TextView
+                            android:id="@+id/pin_about_place"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:textStyle="bold"
+                            android:textSize="21sp"
+                            android:textColor="@color/colorPrimaryText"
+                            android:text="@string/pin_about_place"/>
+
+
+
+                        <TextView
+                            android:id="@+id/pin_find_more_place"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:drawableLeft="@drawable/ic_find_more"
+                            android:layout_alignParentRight="true"
+                            android:drawableTint="@color/colorAccent"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:clickable="true"
+                            android:text="@string/pin_find_more_place"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp">
+
+                        <com.google.android.gms.maps.MapView
+                            android:id="@+id/map"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:cameraZoom="8"
+                            app:mapType="normal"
+                            app:liteMode="true" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/rounded_rect">
+
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <View style="@style/navigationSeparator"
+                    android:layout_marginBottom="10dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="21sp"
+                    android:textColor="@color/colorPrimaryText"
+                    android:text="@string/pin_related_place"/>
+
+                <LinearLayout
+                    android:id="@+id/pin_related_preview"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_height="50dp">
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:layout_width="50dp"
+                        android:layout_height ="match_parent"
+                        android:layout_marginRight="5dp"
+                        app:roundAsCircle="true"
+                        app:failureImage="@color/colorAccent"
+                        app:placeholderImage="@color/divider"/>
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:layout_width="50dp"
+                        android:layout_height ="match_parent"
+                        android:layout_marginRight="5dp"
+                        app:roundAsCircle="true"
+                        app:failureImage="@color/colorAccent"
+                        app:placeholderImage="@color/divider"/>
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:layout_width="50dp"
+                        android:layout_height ="match_parent"
+                        android:layout_marginRight="5dp"
+                        app:roundAsCircle="true"
+                        app:failureImage="@color/colorAccent"
+                        app:placeholderImage="@color/divider"/>
+
+                    <Button
+                        android:id="@+id/pin_show_related"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/ic_related_pins"
+                        android:backgroundTint="@color/colorAccent"
+                        android:textColor="@color/colorAccent"
+                        android:padding="10dp"
+                        android:textSize="10sp"
+                        android:text="@string/pin_related_more"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/pin_related_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:background="@color/colorTranslucentStatusBar"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <ImageButton
+                    android:id="@+id/pin_related_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/ic_close"
+                    android:backgroundTint="#FFFFFF"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <android.support.v4.widget.SwipeRefreshLayout
+                    android:id="@+id/swipe_refresh_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:id="@+id/pins_recycler_view"
+                        tools:context="org.freelectron.leobel.easytrip.fragments.PinDetailsFragment"
+                        tools:listitem="@layout/fragment_pin" />
+
+                </android.support.v4.widget.SwipeRefreshLayout>
+
+                <include layout="@layout/recycler_error_list" />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+
+</android.support.design.widget.CoordinatorLayout>

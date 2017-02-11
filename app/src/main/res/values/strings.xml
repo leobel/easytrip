@@ -3,6 +3,78 @@
     <string name="find_location_place_holder">city name or airport</string>
     <string name="pinterest_api">4878705636740704524</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="inspire_me_tab">Inspire Me</string>
+    <string name="flight_tab">Flights</string>
+    <string name="hotel_tab">Hotels</string>
+
+    <string name="lonely_planet_tab">Lonely Planet</string>
+    <string name="adventure_tab">Adventure</string>
+    <string name="art_culture_tab">Art &amp; Culture</string>
+    <string name="festival_event_tab">Festival &amp; Events</string>
+    <string name="relax_tab">Relax Holydays</string>
+
+    <!-- Search Form -->
+    <string name="search_flight">Search Flights</string>
+    <string name="flight_from">From</string>
+    <string name="flight_to">To</string>
+    <string name="flight_departure">Departure</string>
+    <string name="flight_return">Return</string>
+    <string name="flight_round_trip">Round Trip</string>
+    <string name="flight_one_way">One Way</string>
+    <string name="flight_cabin_class">Cabin class</string>
+    <string name="flight_destination">Destination</string>
+    <string name="flight_depart">Depart</string>
+    <string name="flight_passengers_adult">Adults</string>
+    <string name="flight_passengers_children">Children</string>
+    <string name="flight_passengers_infant">Infants</string>
+    <string name="infants_restriction">Infants cannot exceed adults</string>
+    <string name="flight_travelers">Travelers</string>
+    <string name="flight_traveler">Traveler</string>
+    <string name="flight_economy_class">Economy</string>
+    <string name="flight_premium_economy_class">Premium Economy</string>
+    <string name="flight_business_class">Business</string>
+    <string name="flight_first_class">First</string>
+    <string name="save">save</string>
+    <string name="flight_cabin_passenger_save_ask">Save or discard changes?</string>
+    <string name="flight_cabin_passenger_discard_ask">Discard changes?</string>
+    <string name="flight_cabin_passenger_negative_text">Discard</string>
+    <string name="flight_cabin_passenger_positive_text">Save</string>
+    <string name="flight_cabin_passenger_positive_cancel_text">Cancel</string>
+    <string name="flight_invalid_departure_place">Departure Place cannot be empty</string>
+    <string name="flight_invalid_destination_place">Destination place cannot be empty</string>
+    <string name="flight_invalid_departure_date">Departure date cannot be empty</string>
+    <string name="flight_invalid_return_date">Return date cannot be empty</string>
+
+    <!-- Login -->
+    <string name="login_dialog_message">You need a Pinterest account to have access to this feature.</string>
+    <string name="login_dialog_login">Login</string>
+    <string name="login">Log In</string>
+    <string name="logout">Log Out</string>
+    <string name="find_way_to_go">Flight to go there</string>
+    <string name="find_place_to_stay">Place to stay there</string>
+    <string name="loading_error">Tap to try again.</string>
+    <string name="unknown_place">Unknown place</string>
+
+    <!-- Connection -->
+    <string name="require_connection">You are not connected to Internet. Please check your network connection and try again.</string>
+    <string name="require_connection_settings">Settings</string>
+    <string name="require_connection_ok">Ok</string>
+
+    <!-- Pin -->
+    <string name="pin_about_place">About %s</string>
+    <string name="pin_find_more_place">Find more</string>
+    <string name="pin_related_place">Related Pins</string>
+    <string name="pin_list_query">id,color,board,link,note,url,counts,image,metadata</string>
+    <string name="pin_details_query">id,color,board,link,note,url,counts,image,metadata</string>
+    <string name="pin_related_count">%1$s%2$d</string>
+    <string name="board_details_query">id,counts</string>
+    <string name="pin_related_more">more</string>
+
 </resources>

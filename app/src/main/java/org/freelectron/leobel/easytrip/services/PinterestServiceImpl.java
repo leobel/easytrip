@@ -3,6 +3,7 @@ package org.freelectron.leobel.easytrip.services;
 import android.content.Context;
 import android.util.Log;
 
+import com.pinterest.android.pdk.PDKBoard;
 import com.pinterest.android.pdk.PDKCallback;
 import com.pinterest.android.pdk.PDKClient;
 import com.pinterest.android.pdk.PDKException;
@@ -32,7 +33,7 @@ public class PinterestServiceImpl implements PinterestService {
 
     @Override
     public Observable<Response<PDKUser>> login(Context context, List<String> scopes) {
-        return Observable.create(new Observable.OnSubscribe<Response<PDKUser>>(){
+        return Response.handle(Observable.create(new Observable.OnSubscribe<Response<PDKUser>>(){
             @Override
             public void call(Subscriber<? super Response<PDKUser>> subscriber) {
                 pdkClient.login(context, scopes, new PDKCallback() {
@@ -52,7 +53,7 @@ public class PinterestServiceImpl implements PinterestService {
                     }
                 });
             }
-        }).onErrorReturn(throwable -> new Response<>(throwable, Response.NETWORK));
+        }), Response.NETWORK);
     }
 
     @Override
@@ -71,7 +72,6 @@ public class PinterestServiceImpl implements PinterestService {
                             }
                             subscriber.onNext(new PageResponse<>(response.getPinList(), paginateInfo, Response.NETWORK));
                             subscriber.onCompleted();
-                            Timber.d("Result pin list success!!!");
                         }
                     }
 
@@ -82,5 +82,58 @@ public class PinterestServiceImpl implements PinterestService {
                 });
             }
         }).onErrorReturn(throwable -> new PageResponse<>(throwable, Response.NETWORK));
+    }
+
+    @Override
+    public Observable<PageResponse<List<PDKPin>>> getBoardPins(String board, String fields, String cursor) {
+        return Response.handlePageResponse(Observable.create(new Observable.OnSubscribe<PageResponse<List<PDKPin>>>() {
+            @Override
+            public void call(Subscriber<? super PageResponse<List<PDKPin>>> subscriber) {
+                pdkClient.getBoardPins(board, fields, cursor, new PDKCallback(){
+                    @Override
+                    public void onSuccess(PDKResponse response) {
+                        if (! subscriber.isUnsubscribed()) {
+                            PaginateInfo<String> paginateInfo = null;
+                            if(response.hasNext()){
+                                paginateInfo = new PaginateInfo<>();
+                                paginateInfo.setIndex(response.getCursor());
+                            }
+                            subscriber.onNext(new PageResponse<>(response.getPinList(), paginateInfo, Response.NETWORK));
+                            subscriber.onCompleted();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(PDKException exception) {
+                        subscriber.onError(exception);
+                    }
+                });
+            }
+        }), Response.NETWORK);
+    }
+
+    @Override
+    public Observable<Response<PDKBoard>> getBoard(String boardId, String fields) {
+        return Response.handle(Observable.create(new Observable.OnSubscribe<Response<PDKBoard>>(){
+            @Override
+            public void call(Subscriber<? super Response<PDKBoard>> subscriber) {
+                pdkClient.getBoard(boardId, fields, new PDKCallback() {
+                    @Override
+                    public void onSuccess(PDKResponse response) {
+                        if (!subscriber.isUnsubscribed()) {
+
+                            subscriber.onNext(new Response<>(response.getBoard(), Response.NETWORK));
+                            subscriber.onCompleted();
+                            Timber.d("Result login success!!!");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(PDKException exception) {
+                        subscriber.onError(exception);
+                    }
+                });
+            }
+        }), Response.NETWORK);
     }
 }

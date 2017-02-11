@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#6AA3F2</color>
+    <color name="colorPrimaryDark">#36517E</color>
+    <color name="colorPrimaryLight">#BBDEFB</color>
+    <color name="colorAccent">#FF5722</color>
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondaryText">#757575</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#BDBDBD</color>
+    <color name="colorTranslucentStatusBar">#21000000</color>
+    <color name="colorTranslucentRelatedPin">#BB000000</color>
+    <!--<color name="colorFlightFormBackground">#36517E</color>-->
+    <!--<color name="colorFlightFormWhite">#FAFAFA</color>-->
+    <!--<color name="colorFlightFormLine">#E1E1E1</color>-->
+    <!--<color name="colorFlightFormIcon">#5FA7F1</color>-->
+    <!--<color name="colorFlightFormButton">#6AA3F2</color>-->
+
+    <!--<color name="primary">#3F51B5</color>-->
+    <!--<color name="primary_dark">#303F9F</color>-->
+    <!--<color name="primary_light">#C5CAE9</color>-->
+    <!--<color name="accent">#FF5722</color>-->
+
+    <color name="primary">#2196F3</color>
+    <color name="primary_dark">#1976D2</color>
+    <color name="primary_light">#BBDEFB</color>
+    <color name="accent">#FF5722</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#757575</color>
+
+
+
 </resources>

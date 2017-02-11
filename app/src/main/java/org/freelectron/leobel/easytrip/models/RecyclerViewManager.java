@@ -1,7 +1,15 @@
 package org.freelectron.leobel.easytrip.models;
 
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+
+import org.freelectron.leobel.easytrip.Utils;
+
+import java.io.Serializable;
+import java.util.List;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -14,52 +22,139 @@ import timber.log.Timber;
 
 public class RecyclerViewManager<T> {
 
-    private final RecyclerViewListener<T> listener;
-    private final RecyclerView recyclerView;
-    private final View emptyView;
-    private final RecyclerViewAdapter recyclerViewAdapter;
+    protected RecyclerViewListener<T> listener;
+    protected RecyclerView recyclerView;
+    protected View emptyView;
+    protected RecyclerViewAdapter recyclerViewAdapter;
+    protected SwipeRefreshLayout swipeRefreshLayout;
 
-    private Subscription pendingRequest;
-    private PaginateInfo<?> currentPaginateInfo;
-    int currentPage;
+    protected Subscription pendingRequest;
+    protected PaginateInfo<?> currentPaginateInfo;
+    protected boolean isLoading;
+    protected boolean hasMoreItems;
 
-    public RecyclerViewManager(RecyclerViewListener<T> listener, RecyclerView recyclerView, View emptyView){
+    public RecyclerViewManager(RecyclerViewListener<T> listener, RecyclerView recyclerView, SwipeRefreshLayout swipeRefreshLayout, View emptyView, List<T> items, PaginateInfo<?> paginateInfo){
         this.listener = listener;
         this.recyclerView = recyclerView;
+        this.swipeRefreshLayout = swipeRefreshLayout;
         this.emptyView = emptyView;
         this.recyclerViewAdapter = listener.getAdapter();
+        this.currentPaginateInfo = paginateInfo;
 
         this.recyclerView.setAdapter(recyclerViewAdapter);
-        this.emptyView.setVisibility(View.INVISIBLE);
+        this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                RecyclerViewManager.this.onScrolled(recyclerView, dy);
 
-        requestItems(currentPaginateInfo);
+            }
+
+        });
+        this.emptyView.setVisibility(View.INVISIBLE);
+        this.swipeRefreshLayout.setOnRefreshListener(() -> {
+            refreshList();
+        });
+        this.emptyView.setOnClickListener(view -> {
+            emptyView.setVisibility(View.GONE);
+            requestItems(currentPaginateInfo, true);
+        });
+        recyclerViewAdapter.setListener(listener);
+
+        if(items == null){
+            requestItems(null, false);
+        }
+        else{
+            recyclerViewAdapter.setItems(items);
+        }
     }
 
-    private void requestItems(PaginateInfo<?> paginateInfo) {
+    private void onScrolled(RecyclerView recyclerView, int dy) {
+        if(hasMoreItems()){
+            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+            int totalItems = recyclerViewAdapter.getItemCount();
+            int visibleItems = layoutManager.getChildCount();
+            int firstVisiblePosition;
+            if(layoutManager instanceof StaggeredGridLayoutManager){
+                firstVisiblePosition = Utils.min(((StaggeredGridLayoutManager)layoutManager).findFirstVisibleItemPositions(null), 0);
+            }
+            else{
+                firstVisiblePosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+            }
+            if(dy > 0 &&!isLoading && (visibleItems + firstVisiblePosition) >= totalItems){
+                requestItems(currentPaginateInfo, true);
+            }
+        }
+    }
+
+    protected boolean hasMoreItems() {
+        return currentPaginateInfo != null;
+    }
+
+    protected void setHasMoreItems(PageResponse<List<T>> response){
+        currentPaginateInfo = response.getPaginateInfo();
+    }
+
+
+    protected void refreshList() {
+        currentPaginateInfo = null;
+        unSubscribe();
+        requestItems(currentPaginateInfo, false);
+    }
+
+    protected void setCurrentPaginateInfo(PaginateInfo<?> paginateInfo){
+        currentPaginateInfo = paginateInfo;
+    }
+
+    public void requestItems(PaginateInfo<?> paginateInfo, boolean append) {
+        isLoading = true;
         pendingRequest = listener.getItems(paginateInfo)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {
+                    isLoading = false;
+                    if(swipeRefreshLayout.isRefreshing()){
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                     if(response.isSuccessful()){
-                        if(paginateInfo == null){
-                            recyclerViewAdapter.setItems(response.getValue());
-                        }
-                        else{
+                        if(append){
                             recyclerViewAdapter.appendItems(response.getValue());
                         }
-                        if(response.hasMoreItems()){
-                            currentPaginateInfo = response.getPaginateInfo();
+                        else{
+                            recyclerViewAdapter.setItems(response.getValue());
                         }
+                        setHasMoreItems(response);
                     }
                     else{
+                        emptyView.setVisibility(View.VISIBLE);
                         listener.onLoadingItemsError(response.getError());
                     }
                 });
     }
 
-    public void detachRecyclerView(){
-        if(!pendingRequest.isUnsubscribed()){
+    public void unSubscribe(){
+        if(pendingRequest != null && !pendingRequest.isUnsubscribed()){
             pendingRequest.unsubscribe();
+            isLoading = false;
         }
+    }
+
+    public RecyclerViewListener<T> getListener(){
+        return listener;
+    }
+
+    public boolean isLoading(){
+        return isLoading;
+    }
+
+    public List<T> getItems(){
+        return recyclerViewAdapter.getItems();
+    }
+
+    public void setItems(List<T> items){
+        recyclerViewAdapter.setItems(items);
+    }
+
+    public PaginateInfo<?> getPaginateInfo(){
+        return currentPaginateInfo;
     }
 }

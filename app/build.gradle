@@ -1,6 +1,6 @@
-apply plugin: 'com.android.application'
+      apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
-//apply plugin: 'realm-android'
+apply plugin: 'realm-android'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.android.application'
 
@@ -16,8 +16,10 @@ android {
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0"
+        versionName "0.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled  true
 
         buildConfigField("String", "SKY_SCANNER_BASE_API_URL", "\"http://partners.api.skyscanner.net/apiservices/\"")
         buildConfigField("String", "SKY_SCANNER_API_KEY", "\"prtl6749387986743898559646983194\"")
@@ -99,6 +101,7 @@ dependencies {
     compile 'com.facebook.stetho:stetho-okhttp3:1.3.1'
 
     compile project(':pdk')
+    compile 'com.google.android.gms:play-services-maps:10.0.1'
 }
 
 retrolambda {

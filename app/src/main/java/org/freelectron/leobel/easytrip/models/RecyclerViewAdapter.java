@@ -50,16 +50,16 @@ public class RecyclerViewAdapter<T, V extends RecyclerViewHolder<T> > extends Re
 
     public void setItems(List<T> items){
         this.items.clear();
-
         appendItems(items);
     }
 
     public void appendItems(List<T> items) {
-        for (T item: items) {
-            this.items.add(item);
-        }
-
+        this.items.addAll(items);
         notifyDataSetChanged();
+    }
+
+    public List<T> getItems(){
+        return items;
     }
 
     public void setListener(RecyclerViewListener<T> listener){

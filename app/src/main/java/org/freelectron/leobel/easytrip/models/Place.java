@@ -2,11 +2,13 @@ package org.freelectron.leobel.easytrip.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
+
 /**
  * Created by leobel on 1/5/17.
  */
 
-public class Place {
+public class Place implements Serializable{
 
     @JsonProperty("PlaceId")
     private String placeId;

@@ -20,6 +20,8 @@ import org.freelectron.leobel.easytrip.services.PinterestService;
 import org.freelectron.leobel.easytrip.services.PinterestServiceImpl;
 import org.freelectron.leobel.easytrip.services.PreferenceService;
 import org.freelectron.leobel.easytrip.services.PreferenceServiceImpl;
+import org.freelectron.leobel.easytrip.services.RealmService;
+import org.freelectron.leobel.easytrip.services.RealmServiceImpl;
 import org.freelectron.leobel.easytrip.services.SecurityInterceptor;
 
 import javax.inject.Named;
@@ -108,5 +110,10 @@ public class ServicesModule {
     @Singleton @Provides
     public PinterestService providesPinterestService(PDKClient pdkClient){
         return new PinterestServiceImpl(pdkClient);
+    }
+
+    @Singleton @Provides
+    public RealmService providesRealmService(){
+        return new RealmServiceImpl();
     }
 }

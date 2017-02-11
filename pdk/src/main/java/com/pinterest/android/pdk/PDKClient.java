@@ -106,6 +106,10 @@ public class PDKClient {
         return PDKClient.getInstance();
     }
 
+    public static boolean isAuthenticated(){
+        return _isAuthenticated;
+    }
+
     // ================================================================================
     // Getters/Setters
     // ================================================================================
@@ -136,6 +140,7 @@ public class PDKClient {
     public void logout() {
         _accessToken = null;
         _scopes = null;
+        _isAuthenticated = false;
         cancelPendingRequests();
         saveAccessToken(null);
         saveScopes(null);
@@ -328,6 +333,19 @@ public class PDKClient {
         }
         String path =  BOARDS + boardId + "/" + PINS;
         getPath(path, getMapWithFields(fields), callback);
+    }
+
+    public void getBoardPins(String boardId, String fields, String cursor, PDKCallback callback) {
+        if (Utils.isEmpty(boardId)) {
+            if (callback != null) callback.onFailure(new PDKException("Invalid board Id"));
+            return;
+        }
+        String path =  BOARDS + boardId + "/" + PINS;
+        HashMap<String, String> params = getMapWithFields(fields);
+        if(cursor != null && !cursor.isEmpty()){
+            params.put(PDKClient.PDK_QUERY_PARAM_CURSOR, cursor);
+        }
+        getPath(path, params, callback);
     }
 
     public void deleteBoard(String boardId, PDKCallback callback) {

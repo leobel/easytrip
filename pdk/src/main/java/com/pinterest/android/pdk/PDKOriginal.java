@@ -2,11 +2,13 @@ package com.pinterest.android.pdk;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
+
 /**
  * Created by leobel on 1/16/17.
  */
 
-public class PDKOriginal {
+public class PDKOriginal implements Serializable{
 
     @JsonProperty("url")
     private String url;

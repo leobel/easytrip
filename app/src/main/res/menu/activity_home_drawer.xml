@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_inspire_me"
+            android:icon="@drawable/ic_inspire_me"
+            android:title="@string/inspire_me_tab" />
+        <item
+            android:id="@+id/nav_flights"
+            android:icon="@drawable/ic_airport"
+            android:title="@string/flight_tab" />
+        <item
+            android:id="@+id/nav_hotels"
+            android:icon="@drawable/ic_hotels"
+            android:title="@string/hotel_tab" />
+        <item
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Tools" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/login"
+                android:icon="@drawable/ic_login"
+                android:title="@string/login" />
+        </menu>
+    </item>
+
+</menu>

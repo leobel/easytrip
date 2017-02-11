@@ -1,5 +1,6 @@
 package org.freelectron.leobel.easytrip.services;
 
+import org.freelectron.leobel.easytrip.models.PageResponse;
 import org.freelectron.leobel.easytrip.models.Place;
 import org.freelectron.leobel.easytrip.models.Response;
 

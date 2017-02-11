@@ -8,6 +8,8 @@ import com.squareup.leakcanary.LeakCanary;
 import org.freelectron.leobel.easytrip.modules.AppModule;
 import org.freelectron.leobel.easytrip.modules.ServicesModule;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import timber.log.Timber;
 
 /**
@@ -26,9 +28,17 @@ public class EasyTripApp extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
-        //Initialize Pinterest
+        // Initialize Realm
+        // The Realm file will be located in Context.getFilesDir() with name "default.realm"
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .schemaVersion(1)
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
+
+        // Initialize Pinterest
         PDKClient.configureInstance(this, getString(R.string.pinterest_api));
-        PDKClient.getInstance().onConnect(this);
 
         // Initialize Leak Canary
         LeakCanary.install(this);
